@@ -13,9 +13,9 @@
 // limitations under the License.
 // ========================================================================
 
+#include <regex>
 #include <string>
 #include "omaha/base/app_util.h"
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/constants.h"
 #include "omaha/base/const_addresses.h"
 #include "omaha/base/const_object_names.h"
@@ -184,9 +184,8 @@ TEST_F(CrashReporterTest, DISABLED_Report_ProductCrash) {
   const CString strings = GetLastCrashEventStrings();
 
   // Verify that the strings include the Id token.
-  AtlRE crash_id_regex(_T("Id={\\h+}."));
-  CString crash_id;
-  EXPECT_TRUE(AtlRE::PartialMatch(strings, crash_id_regex, &crash_id));
+  std::wregex crash_id_regex(_T("Id=([0-9a-fA-F]+)."));
+  EXPECT_TRUE(std::regex_search(strings.GetString(), crash_id_regex));
 
   // The crash artifacts should be deleted after the crash is reported.
   EXPECT_FALSE(File::Exists(crash_filename));

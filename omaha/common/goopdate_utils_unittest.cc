@@ -21,10 +21,10 @@
 #include <atlsecurity.h>
 #include <atlstr.h>
 #include <map>
+#include <regex>
 #include <vector>
 
 #include "omaha/base/app_util.h"
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/browser_utils.h"
 #include "omaha/base/constants.h"
 #include "omaha/base/const_utils.h"
@@ -892,21 +892,28 @@ TEST(GoopdateUtilsTest, GetOSInfo) {
   CString os_version_getosinfo;
   CString sp_getosinfo;
   EXPECT_SUCCEEDED(GetOSInfo(&os_version_getosinfo, &sp_getosinfo));
+  std::wstring os_version_getosinfo_str = os_version_getosinfo.GetString();
 
-  CString os_version = SystemInfo::GetKernel32OSVersion();
-  EXPECT_TRUE(!os_version.IsEmpty());
+  std::wstring os_version = SystemInfo::GetKernel32OSVersion().GetString();
+  EXPECT_TRUE(!os_version.empty());
 
-  const AtlRE major_minor_build = _T("{\\d+\\.\\d+\\.\\d+}");
+  std::wregex major_minor_build(_T("(\\d+\\.\\d+\\.\\d+)"));
 
-  CString expected_os_version;
-  CString actual_os_version;
-  EXPECT_TRUE(AtlRE::PartialMatch(os_version,
-                                  major_minor_build,
-                                  &expected_os_version));
-  EXPECT_TRUE(AtlRE::PartialMatch(os_version_getosinfo,
-                                  major_minor_build,
-                                  &actual_os_version));
-  EXPECT_STREQ(expected_os_version, actual_os_version);
+  std::wsmatch expected_os_version_match;
+  std::wsmatch actual_os_version_match;
+  std::wstring expected_os_version;
+  std::wstring actual_os_version;
+  EXPECT_TRUE(std::regex_search(os_version,
+                              expected_os_version_match,
+                              major_minor_build));
+  expected_os_version = expected_os_version_match.str(0);
+
+  EXPECT_TRUE(std::regex_search(os_version_getosinfo_str,
+                              actual_os_version_match,
+                              major_minor_build));
+  actual_os_version = actual_os_version_match.str(0);
+
+  EXPECT_TRUE(0 == expected_os_version.compare(actual_os_version));
 }
 
 class GoopdateUtilsRegistryProtectedTest : public testing::Test {

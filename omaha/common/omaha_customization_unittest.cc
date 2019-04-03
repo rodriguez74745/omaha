@@ -325,11 +325,11 @@ TEST(OmahaCustomizationTest, Constants_Plugins) {
 
 TEST(OmahaCustomizationTest, Constants_HostCheck) {
   EXPECT_EQ(5, arraysize(kSiteLockPatternStrings));
-  EXPECT_STREQ(_T("^(gears)|(mail)|(tools)|(www)|(desktop)|(pack)|(chrome)|(drive)\\.google\\.com$"), kSiteLockPatternStrings[0]);  // NOLINT
-  EXPECT_STREQ(_T("^www\\.google\\.(ad)|(bg)|(ca)|(cn)|(cz)|(de)|(es)|(fi)|(fr)|(gr)|(hr)|(hu)|(it)|(ki)|(kr)|(lt)|(lv)|(nl)|(no)|(pl)|(pt)|(ro)|(ru)|(sk)|(sg)|(sl)|(sr)|(vn)$"), kSiteLockPatternStrings[1]);  // NOLINT
-  EXPECT_STREQ(_T("^www\\.google\\.co\\.(hu)|(id)|(il)|(it)|(jp)|(kr)|(th)|(uk)$"), kSiteLockPatternStrings[2]);  // NOLINT
-  EXPECT_STREQ(_T("^www\\.google\\.com\\.(ar)|(au)|(br)|(cn)|(et)|(gr)|(hr)|(ki)|(lv)|(om)|(pl)|(pt)|(ru)|(sg)|(sv)|(tr)|(vn)$"), kSiteLockPatternStrings[3]);  // NOLINT
-  EXPECT_STREQ(_T("^(www\\.)?chrome\\.com$"), kSiteLockPatternStrings[4]);
+  EXPECT_STREQ(_T("^[gears|mail|tools|www|desktop|pack|chrome|drive]\\.google\\.com$"), kSiteLockPatternStrings[0]);  // NOLINT
+  EXPECT_STREQ(_T("^www\\.google\\.[ad|bg|ca|cn|cz|de|es|fi|fr|gr|hr|hu|it|ki|kr|lt|lv|nl|no|pl|pt|ro|ru|sk|sg|sl|sr|vn]$"), kSiteLockPatternStrings[1]);  // NOLINT
+  EXPECT_STREQ(_T("^www\\.google\\.co\\.[hu|id|il|it|jp|kr|th|uk]$"), kSiteLockPatternStrings[2]);  // NOLINT
+  EXPECT_STREQ(_T("^www\\.google\\.com\\.[ar|au|br|cn|et|gr|hr|ki|lv|om|pl|pt|ru|sg|sv|tr|vn]$"), kSiteLockPatternStrings[3]);  // NOLINT
+  EXPECT_STREQ(_T("^[www\\.]?chrome\\.com$"), kSiteLockPatternStrings[4]);
 }
 
 //

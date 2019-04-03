@@ -18,10 +18,11 @@
 
 #include <windows.h>
 #include <tchar.h>
+#include <regex>
 #include <vector>
 
 #include "base/basictypes.h"
-#include "omaha/base/atl_regexp.h"
+
 
 namespace omaha {
 
@@ -42,7 +43,7 @@ class SiteLock {
   static HRESULT ExtractUrlFromBrowser(IObjectWithSite* plugin, CString* url);
   static HRESULT ExtractUrlFromPropBag(IObjectWithSite* plugin, CString* url);
 
-  std::vector<AtlRegExp*> patterns_;
+  std::vector<std::wregex> patterns_;
 
   DISALLOW_COPY_AND_ASSIGN(SiteLock);
 };

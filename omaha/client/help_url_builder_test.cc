@@ -17,8 +17,8 @@
 #include <atlpath.h>
 #include <atlsecurity.h>
 #include <atlstr.h>
+#include <regex>
 #include <vector>
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/error.h"
 #include "omaha/base/omaha_version.h"
 #include "omaha/base/reg_key.h"
@@ -45,26 +45,25 @@ const TCHAR kStringAlmostTooLongForUrl[] =
 
 // Verifies that one of the expected OS strings was found in the url.
 // Returns the position along with the length of the OS string.
-int VerifyOSInUrl(const CString& url, int* length) {
+int VerifyOSInUrl(const std::wstring& url, int* length) {
   ASSERT1(length);
   *length = 0;
 
-  const AtlRE expected_os_string =
-      _T("{(5\\.1)|(5\\.2)|(6\\.0)|(6\\.1)|(6\\.3)|(10\\.0)\\.\\d+\\.\\d+")
-      _T("&sp=(Service%20Pack%20(1|2|3))?}");
+  std::wregex os_string_pattern(L"((5\\.[1-2]|6\\.[013]|10\\.0){1}\\.\\d+\\.\\d+&sp=(Service%20Pack%20[1-3])?)");
 
-  CString os_string;
-  EXPECT_TRUE(AtlRE::PartialMatch(url, expected_os_string, &os_string));
+  std::wsmatch match;
+  EXPECT_TRUE(std::regex_search(url, match, os_string_pattern) && match.size() >= 2);
 
+  CString os_string(match.str(1).c_str());
   *length = os_string.GetLength();
-  return url.Find(os_string);
+  return match.position(0);
 }
 
 }  // namespace
 
 class HelpUrlBuilderTest : public testing::Test {
  protected:
-  HRESULT BuildHttpGetString(
+  HRESULT BuildHttpGetString( 
       const CString& base_url,
       const std::vector<HelpUrlBuilder::AppResult>& app_results,
       const CString& goopdate_version,
@@ -142,7 +141,7 @@ TEST_F(HelpUrlBuilderTest, BuildHttpGetString_MachineNoTestSource) {
       _T("At beginning of: ") << url_req.GetString();
   int os_fragment_len = 0;
   EXPECT_EQ(expected_str_before_os.GetLength(),
-            VerifyOSInUrl(url_req, &os_fragment_len)) <<
+            VerifyOSInUrl(url_req.GetString(), &os_fragment_len)) <<
       _T("Expected OS string not found in: ") << url_req.GetString();
 
   EXPECT_EQ(expected_str_before_os.GetLength() + os_fragment_len,
@@ -202,7 +201,7 @@ TEST_F(HelpUrlBuilderTest, BuildHttpGetString_UserWithTestSource) {
 
   int os_fragment_len = 0;
   EXPECT_EQ(expected_str_before_os.GetLength(),
-            VerifyOSInUrl(url_req, &os_fragment_len)) <<
+            VerifyOSInUrl(url_req.GetString(), &os_fragment_len)) <<
       _T("Expected: ") << expected_str_before_os.GetString() << std::endl <<
       _T("At beginning of: ") << url_req.GetString();
 
@@ -323,7 +322,7 @@ TEST_F(HelpUrlBuilderTest, BuildHttpGetString_MultipleApps) {
       _T("At beginning of: ") << url_req.GetString();
   int os_fragment_len = 0;
   EXPECT_EQ(expected_str_before_os.GetLength(),
-            VerifyOSInUrl(url_req, &os_fragment_len)) <<
+            VerifyOSInUrl(url_req.GetString(), &os_fragment_len)) <<
       _T("Expected OS string not found in: ") << url_req.GetString();
 
   EXPECT_EQ(expected_str_before_os.GetLength() + os_fragment_len,

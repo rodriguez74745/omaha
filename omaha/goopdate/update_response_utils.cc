@@ -15,10 +15,10 @@
 
 #include "omaha/goopdate/update_response_utils.h"
 #include <algorithm>
+#include <regex>
 #include "omaha/base/debug.h"
 #include "omaha/base/error.h"
 #include "omaha/base/logging.h"
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/system_info.h"
 #include "omaha/common/lang.h"
 #include "omaha/common/experiment_labels.h"
@@ -38,7 +38,7 @@ namespace {
 // version and it comes from the update response, or with the a dotted quad,
 // which is the OS version of the host.
 ULONGLONG OSVersionFromString(const CString& s) {
-  if (AtlRE::PartialMatch(s, AtlRE(_T("^\\d+\\.\\d+$")))) {
+  if (std::regex_search(s.GetString(), std::wregex(_T("^\\d+\\.\\d+$")))) {
     // Convert from "x.y" to "x.y.0.0" format so we can use the existing
     // VersionFromString utility function.
     return VersionFromString(s + _T(".0.0"));
@@ -46,7 +46,8 @@ ULONGLONG OSVersionFromString(const CString& s) {
 
   // The string is a dotted quad version. VersionFromString handles the error if
   // the parameter is something else.
-  ASSERT1(AtlRE::PartialMatch(s, AtlRE(_T("^\\d+\\.\\d+\\.\\d+\\.\\d+$"))));
+  ASSERT1(std::regex_search(s.GetString(),
+          std::wregex(_T("^\\d+\\.\\d+\\.\\d+\\.\\d+$"))));
 
   return VersionFromString(s);
 }

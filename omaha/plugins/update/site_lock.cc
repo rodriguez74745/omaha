@@ -15,6 +15,8 @@
 
 #include "omaha/plugins/update/site_lock.h"
 
+#include <regex>
+
 #include <mshtml.h>
 #include <shlobj.h>
 #include <wininet.h>
@@ -45,9 +47,7 @@ SiteLock::SiteLock() {
 }
 
 SiteLock::~SiteLock() {
-  for (size_t i = 0; i < patterns_.size(); ++i) {
-    delete patterns_[i];
-  }
+  patterns_.clear();
 }
 
 bool SiteLock::InApprovedDomain(IObjectWithSite* plugin) {
@@ -71,11 +71,10 @@ bool SiteLock::InApprovedDomain(const WCHAR* url) {
     return false;
   }
   CString hostname(components.lpszHostName, components.dwHostNameLength);
-  for (std::vector<AtlRegExp*>::const_iterator it = patterns_.begin();
+  for (std::vector<std::wregex>::const_iterator it = patterns_.begin();
        it != patterns_.end();
        ++it) {
-    AtlMatchContext context;
-    if ((*it)->Match(hostname, &context)) {
+    if (std::regex_search(hostname, *it)) {
       return true;
     }
   }
@@ -126,14 +125,7 @@ bool SiteLock::AddPattern(const WCHAR* pattern) {
     return false;
   }
 
-  auto re = std::make_unique<AtlRegExp>();
-  REParseError error = re->Parse(pattern);
-  if (REPARSE_ERROR_OK != error) {
-    ASSERT(false, (L"Failed to parse site lock pattern: %s",
-                   pattern));
-    return false;
-  }
-  patterns_.push_back(re.release());
+  patterns_.push_back(std::wregex(pattern));
   return true;
 }
 

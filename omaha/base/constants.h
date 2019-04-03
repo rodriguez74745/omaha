@@ -250,11 +250,11 @@ const TCHAR* const kChromeAppId = CHROME_APP_ID;
 
 // Regular expressions for the servers allowed to use the Omaha plugins.
 const TCHAR* const kSiteLockPatternStrings[] = {
-  _T("^(gears)|(mail)|(tools)|(www)|(desktop)|(pack)|(chrome)|(drive)\\.google\\.com$"),  // NOLINT
-  _T("^www\\.google\\.(ad)|(bg)|(ca)|(cn)|(cz)|(de)|(es)|(fi)|(fr)|(gr)|(hr)|(hu)|(it)|(ki)|(kr)|(lt)|(lv)|(nl)|(no)|(pl)|(pt)|(ro)|(ru)|(sk)|(sg)|(sl)|(sr)|(vn)$"),  // NOLINT
-  _T("^www\\.google\\.co\\.(hu)|(id)|(il)|(it)|(jp)|(kr)|(th)|(uk)$"),
-  _T("^www\\.google\\.com\\.(ar)|(au)|(br)|(cn)|(et)|(gr)|(hr)|(ki)|(lv)|(om)|(pl)|(pt)|(ru)|(sg)|(sv)|(tr)|(vn)$"),  // NOLINT
-  _T("^(www\\.)?chrome\\.com$"),
+  _T("^[gears|mail|tools|www|desktop|pack|chrome|drive]\\.google\\.com$"),  // NOLINT
+  _T("^www\\.google\\.[ad|bg|ca|cn|cz|de|es|fi|fr|gr|hr|hu|it|ki|kr|lt|lv|nl|no|pl|pt|ro|ru|sk|sg|sl|sr|vn]$"),  // NOLINT
+  _T("^www\\.google\\.co\\.[hu|id|il|it|jp|kr|th|uk]$"),
+  _T("^www\\.google\\.com\\.[ar|au|br|cn|et|gr|hr|ki|lv|om|pl|pt|ru|sg|sv|tr|vn]$"),  // NOLINT
+  _T("^[www\\.]?chrome\\.com$"),
 };
 
 //

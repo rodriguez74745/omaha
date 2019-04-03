@@ -19,6 +19,7 @@
 #include "omaha/net/detector.h"
 
 #include <memory>
+
 #include "omaha/base/browser_utils.h"
 #include "omaha/base/constants.h"
 #include "omaha/base/debug.h"

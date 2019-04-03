@@ -17,10 +17,10 @@
 #include <atltypes.h>
 #include <atlwin.h>
 #include <map>
+#include <regex>
 #include <vector>
 #include "base/rand_util.h"
 #include "omaha/base/app_util.h"
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/constants.h"
 #include "omaha/base/dynamic_link_kernel32.h"
 #include "omaha/base/file.h"
@@ -697,37 +697,37 @@ TEST(UtilsTest, interlocked_exchange_pointer) {
 }
 
 TEST(UtilsTest, GetGuid)  {
-  CString guid;
-  EXPECT_HRESULT_SUCCEEDED(GetGuid(&guid));
+  CString cguid;
+  EXPECT_HRESULT_SUCCEEDED(GetGuid(&cguid));
+  std::wstring guid(cguid.GetString());
 
-  // ATL regexp has many problems including:
-  // * not supporting {n} to repeat a previous item n times.
-  // * not allowing matching on - unless the items around the dash are
-  // enclosed in {}.
-  AtlRE guid_regex(_T("^{\\{{\\h\\h\\h\\h\\h\\h\\h\\h}-{\\h\\h\\h\\h}-{\\h\\h\\h\\h}-{\\h\\h\\h\\h}-{\\h\\h\\h\\h\\h\\h\\h\\h\\h\\h\\h\\h}\\}}$"));   // NOLINT
+  std::regex::flag_type flag = std::regex_constants::ECMAScript |
+                               std::regex_constants::icase;
 
-  CString matched_guid;
-  EXPECT_TRUE(AtlRE::PartialMatch(guid, guid_regex, &matched_guid));
-  EXPECT_STREQ(guid, matched_guid);
+  std::wregex guid_regex(_T("^\\{[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\\}$"), flag);   // NOLINT
+
+  std::wsmatch matched_guid;
+  EXPECT_TRUE(std::regex_search(guid, matched_guid, guid_regex));
+  EXPECT_TRUE(guid.compare(matched_guid[0]) == 0);
 
   // Missing {}.
   guid = _T("5F5280C6-9674-429b-9FEB-551914EF96B8");
-  EXPECT_FALSE(AtlRE::PartialMatch(guid, guid_regex));
+  EXPECT_FALSE(std::regex_search(guid, guid_regex));
 
   // Missing -.
   guid = _T("{5F5280C6.9674-429b-9FEB-551914EF96B8}");
-  EXPECT_FALSE(AtlRE::PartialMatch(guid, guid_regex));
+  EXPECT_FALSE(std::regex_search(guid, guid_regex));
 
   // Whitespaces.
   guid = _T(" {5F5280C6.9674-429b-9FEB-551914EF96B8}");
-  EXPECT_FALSE(AtlRE::PartialMatch(guid, guid_regex));
+  EXPECT_FALSE(std::regex_search(guid, guid_regex));
 
   guid = _T("{5F5280C6.9674-429b-9FEB-551914EF96B8} ");
-  EXPECT_FALSE(AtlRE::PartialMatch(guid, guid_regex));
+  EXPECT_FALSE(std::regex_search(guid, guid_regex));
 
   // Empty string.
   guid = _T("");
-  EXPECT_FALSE(AtlRE::PartialMatch(guid, guid_regex));
+  EXPECT_FALSE(std::regex_search(guid, guid_regex));
 }
 
 TEST(UtilsTest, GetMessageForSystemErrorCode) {
