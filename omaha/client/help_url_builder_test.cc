@@ -17,8 +17,8 @@
 #include <atlpath.h>
 #include <atlsecurity.h>
 #include <atlstr.h>
+#include <regex>
 #include <vector>
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/error.h"
 #include "omaha/base/omaha_version.h"
 #include "omaha/base/reg_key.h"
@@ -49,12 +49,14 @@ int VerifyOSInUrl(const CString& url, int* length) {
   ASSERT1(length);
   *length = 0;
 
-  const AtlRE expected_os_string =
-      _T("{(5\\.1)|(5\\.2)|(6\\.0)|(6\\.1)|(6\\.3)|(10\\.0)\\.\\d+\\.\\d+")
-      _T("&sp=(Service%20Pack%20(1|2|3))?}");
+  const std::wregex expected_os_string( 
+      L"(((5\\.[12])|(6.\\.[123])|(10\\.0))\\.\\d+\\.\\d+"
+      L"&sp=(Service%20Pack%20[123])?)");
 
   CString os_string;
-  EXPECT_TRUE(AtlRE::PartialMatch(url, expected_os_string, &os_string));
+  std::wcmatch match;
+  EXPECT_TRUE(std::regex_match(url, match, expected_os_string));
+  os_string = match[0].str().c_str();
 
   *length = os_string.GetLength();
   return url.Find(os_string);

@@ -18,7 +18,6 @@
 #include "omaha/base/debug.h"
 #include "omaha/base/error.h"
 #include "omaha/base/logging.h"
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/system_info.h"
 #include "omaha/common/lang.h"
 #include "omaha/common/experiment_labels.h"

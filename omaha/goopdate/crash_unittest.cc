@@ -15,7 +15,6 @@
 
 #include <string>
 #include "omaha/base/app_util.h"
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/constants.h"
 #include "omaha/base/const_addresses.h"
 #include "omaha/base/const_object_names.h"

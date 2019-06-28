@@ -18,8 +18,8 @@
 #include "omaha/base/apply_tag.h"
 
 #include <intsafe.h>
-#include <atlrx.h>
 #include <algorithm>
+#include <regex>
 #include <vector>
 
 #include "omaha/base/utils.h"
@@ -41,14 +41,9 @@ ApplyTag::ApplyTag()
 bool ApplyTag::IsValidTagString(const char* tag_string) {
   ASSERT1(tag_string);
 
-  CAtlRegExp<CAtlRECharTraitsA> regex;
-  REParseError error = regex.Parse(kValidTagStringRegEx);
-  if (error != REPARSE_ERROR_OK) {
-    return false;
-  }
-
-  CAtlREMatchContext<CAtlRECharTraitsA> context;
-  return !!regex.Match(tag_string, &context);
+  std::regex pattern(kValidTagStringRegEx);
+ 
+  return std::regex_match(tag_string, pattern);
 }
 
 HRESULT ApplyTag::Init(const TCHAR* signed_exe_file,

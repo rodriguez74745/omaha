@@ -21,7 +21,6 @@
 #include <vector>
 
 #include "base/basictypes.h"
-#include "omaha/base/atl_regexp.h"
 
 namespace omaha {
 

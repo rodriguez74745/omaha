@@ -20,7 +20,6 @@
 #include <wininet.h>
 #include <memory>
 
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/constants.h"
 #include "omaha/base/error.h"
 #include "omaha/base/safe_format.h"

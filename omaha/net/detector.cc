@@ -20,7 +20,6 @@
 #include "omaha/net/detector.h"
 
 #include <memory>
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/browser_utils.h"
 #include "omaha/base/constants.h"
 #include "omaha/base/debug.h"
