@@ -24,7 +24,6 @@
 #include <vector>
 
 #include "omaha/base/app_util.h"
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/browser_utils.h"
 #include "omaha/base/constants.h"
 #include "omaha/base/const_utils.h"
@@ -896,16 +895,19 @@ TEST(GoopdateUtilsTest, GetOSInfo) {
   CString os_version = SystemInfo::GetKernel32OSVersion();
   EXPECT_TRUE(!os_version.IsEmpty());
 
-  const AtlRE major_minor_build = _T("{\\d+\\.\\d+\\.\\d+}");
+  const AtlRE major_minor_build = L"(\\d+\\.\\d+\\.\\d+)";
 
   CString expected_os_version;
   CString actual_os_version;
-  EXPECT_TRUE(AtlRE::PartialMatch(os_version,
-                                  major_minor_build,
-                                  &expected_os_version));
-  EXPECT_TRUE(AtlRE::PartialMatch(os_version_getosinfo,
-                                  major_minor_build,
-                                  &actual_os_version));
+  std::wcmatch matches;
+  EXPECT_TRUE(std::regex_search(os_version,
+                                matches,
+                                major_minor_build);
+  expected_os_version = matches[0].str().c_str();  
+  EXPECT_TRUE(std::regex_search(os_version_getosinfo,
+                                matches,
+                                major_minor_build));
+  actual_os_version = matches[0].str().c_str();
   EXPECT_STREQ(expected_os_version, actual_os_version);
 }
 

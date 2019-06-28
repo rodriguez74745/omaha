@@ -55,7 +55,7 @@ int VerifyOSInUrl(const CString& url, int* length) {
 
   CString os_string;
   std::wcmatch match;
-  EXPECT_TRUE(std::regex_match(url, match, expected_os_string));
+  EXPECT_TRUE(std::regex_match(url.GetString(), match, expected_os_string));
   os_string = match[0].str().c_str();
 
   *length = os_string.GetLength();
