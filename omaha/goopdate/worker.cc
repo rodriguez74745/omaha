@@ -223,7 +223,7 @@ void SendCupFailurePing(bool is_machine,
                                         PingEvent::DEBUG_SOURCE_CUP_FAILURE,
                                         static_cast<int>(extra_code)));
   ping.LoadOmahaDataFromRegistry();
-  ping.BuildOmahaPing(NULL, NULL, ping_event);
+  ping.BuildOmahaPing(L"", L"", ping_event);
 
   HRESULT hr = SendReliablePing(&ping, false);
   if (FAILED(hr)) {
