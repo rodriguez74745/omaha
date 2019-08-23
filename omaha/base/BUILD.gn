@@ -68,6 +68,10 @@ static_library("lib") {
   ]
 }
 
+static_library("logging") {
+  sources = [ "logging/logging.cc" ]
+}
+
 static_library("security") {
   cflags = [
     "/wd4242",  # conversion from 'type1' to 'type2', possible loss of data

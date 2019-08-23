@@ -34,6 +34,12 @@ config("wtl") {
   ]
 }
 
+config("breakpad") {
+  include_dirs = [
+    "//../third_party/breakpad/src",
+  ]
+}
+
 config("customizations") {
   declare_args() {
     company_name = "OmahaCompanyName Inc."

@@ -1,0 +1,21 @@
+static_library("net") {
+  sources = [
+    "bits_request.cc",
+    "bits_job_callback.cc",
+    "bits_utils.cc",
+    "cup_ecdsa_metrics.cc",
+    "cup_ecdsa_request.cc",
+    "cup_ecdsa_utils.cc",
+    "detector.cc",
+    "http_client.cc",
+    "simple_request.cc",
+    "net_utils.cc",
+    "network_config.cc",
+    "network_request.cc",
+    "network_request_impl.cc",
+    "proxy_auth.cc",
+    "winhttp.cc",
+    "winhttp_adapter.cc",
+    "winhttp_vtable.cc",
+  ]
+}

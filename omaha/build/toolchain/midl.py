@@ -162,7 +162,6 @@ def main(arch, gendir, outdir, dynamic_guid, tlb, h, dlldata, iid, proxy, idl,
     source = os.path.join(source, os.path.basename(idl))
   source = os.path.join(source, arch.split('.')[1])  # Append 'x86' or 'x64'.
   source = os.path.normpath(source)
-  print("copy_tree: source " + str(source) + " outdir " + str(outdir))
   if (os.path.isdir(source)):
     distutils.dir_util.copy_tree(source, outdir, preserve_times=False)
   if dynamic_guid != 'none':
@@ -184,7 +183,6 @@ def main(arch, gendir, outdir, dynamic_guid, tlb, h, dlldata, iid, proxy, idl,
   # Read the environment block from the file. This is stored in the format used
   # by CreateProcess. Drop last 2 NULs, one for list terminator, one for
   # trailing vs. separator.
-  print("ARCH: " + str(arch))
   env_pairs =[] #open(arch).read()[:-2].split('\0')
   env_dict = {}#dict([item.split('=', 1) for item in env_pairs])
 
@@ -216,7 +214,6 @@ def main(arch, gendir, outdir, dynamic_guid, tlb, h, dlldata, iid, proxy, idl,
 
     for f in os.listdir(tmp_dir):
       if f.endswith(".tlb"): continue
-      print(f)
       ZapTimestamp(os.path.join(tmp_dir, f))
 
     # Now compare the output in tmp_dir to the copied-over outputs.

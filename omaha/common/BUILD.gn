@@ -1,6 +1,22 @@
 static_library("goopdate_util_lib") {
-    sources = [
-        "config_manager.cc",
-        "goopdate_utils.cc"
-    ]
+  sources = [
+    "app_registry_utils.cc",
+    "command_line_builder.cc",
+    "config_manager.cc",
+    "experiment_labels.cc",
+    "goopdate_utils.cc",
+    "google_signaturevalidator.cc",
+    "lang.cc",
+    "oem_install_utils.cc",
+    "ping.cc",
+    "ping_event.cc",
+    "ping_event_download_metrics.cc",
+    "scheduled_task_utils.cc",
+    "stats_uploader.cc",
+    "update_request.cc",
+    "update_response.cc",
+    "xml_const.cc",
+    "xml_parser.cc",
+    "web_services_client.cc",
+  ]
 }

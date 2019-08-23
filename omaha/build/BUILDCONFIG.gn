@@ -24,6 +24,7 @@ if (current_os == "") {
 _shared_binary_target_configs = [ 
   "//build:compiler_defaults",
   "//build/config:atl_libs",
+  "//build/config:breakpad",
   "//build/config:customizations",
   "//build/config:gtest",
   "//build/config:proxy_clsid",

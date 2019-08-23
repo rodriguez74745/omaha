@@ -10,10 +10,10 @@ action("generate_idl") {
     "$target_gen_dir/omaha3_idl.idl",
   ]
   args = [
-      "--idl_template_file",
-      rebase_path(inputs[0], root_build_dir),
-      "--idl_output_file",
-      rebase_path(outputs[0], root_build_dir),
+    "--idl_template_file",
+    rebase_path(inputs[0], root_build_dir),
+    "--idl_output_file",
+    rebase_path(outputs[0], root_build_dir),
   ]
 }
 
@@ -27,8 +27,52 @@ midl("omaha3_idl") {
 
 static_library("goopdate_min") {
   sources = [
+    "app.cc",
+    "app_bundle.cc",
+    "app_bundle_state.cc",
+    "app_bundle_state_busy.cc",
+    "app_bundle_state_init.cc",
+    "app_bundle_state_initialized.cc",
+    "app_bundle_state_paused.cc",
+    "app_bundle_state_ready.cc",
+    "app_bundle_state_stopped.cc",
     "app_command.cc",
-    "app_command_configuration.cc",
     "app_command_completion_observer.cc",
+    "app_command_configuration.cc",
+    "app_command_formatter.cc",
+    "app_command_model.cc",
+    "app_command_ping_delegate.cc",
+    "app_manager.cc",
+    "app_state.cc",
+    "app_state_error.cc",
+    "app_state_init.cc",
+    "app_state_checking_for_update.cc",
+    "app_state_download_complete.cc",
+    "app_state_downloading.cc",
+    "app_state_install_complete.cc",
+    "app_state_installing.cc",
+    "app_state_no_update.cc",
+    "app_state_ready_to_install.cc",
+    "app_state_update_available.cc",
+    "app_state_waiting_to_check_for_update.cc",
+    "app_state_waiting_to_download.cc",
+    "app_state_waiting_to_install.cc",
+    "app_version.cc",
+    "application_usage_data.cc",
+    "code_red_check.cc",
+    "current_state.cc",
+    "google_app_command_verifier.cc",
+    "goopdate.cc",
+    "model.cc",
+    "package.cc",
+    "ping_event_cancel.cc",
+    "resource_manager.cc",
+    "string_formatter.cc",
+    "update_request_utils.cc",
+    "update_response_utils.cc",
+    "worker_metrics.cc",
+  ]
+  defines = [
+    "_ATL_FREE_THREADED",
   ]
 }

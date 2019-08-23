@@ -121,6 +121,12 @@ config("compiler_defaults") {
     "ARCH_CPU_X86_FAMILY",
   ]
 
+  if (is_official_build) {
+    defines += ["OFFICIAL_BUILD=1"]
+  } else {
+    defines += ["OFFICIAL_BUILD=0"]
+  }
+
   include_dirs = [
     "//",
     root_gen_dir,

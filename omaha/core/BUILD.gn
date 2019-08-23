@@ -15,14 +15,19 @@ executable("core") {
   deps = [
     ":core_lib",
     "//base:lib",
+    "//base:logging",
     "//base:security",
     "//common:goopdate_util_lib",
     "//goopdate:goopdate_min",
     "//goopdate:omaha3_idl",
+    "//net:net",
     "//statsreport:stats_reporter",
   ]
   libs = [
+    "bits.lib",
+    "comctl32.lib",
     "crypt32.lib",
+    "iphlpapi.lib",
     "mstask.lib",
     "netapi32.lib",
     "oleaut32.lib",
@@ -33,5 +38,6 @@ executable("core") {
     "shell32.lib",
     "taskschd.lib",
     "userenv.lib",
+    "uuid.lib",
   ]
 }
