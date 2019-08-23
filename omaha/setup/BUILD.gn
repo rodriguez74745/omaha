@@ -1,0 +1,13 @@
+static_library("metrics") {
+  sources = [
+    "setup_metrics.cc",
+  ]
+}
+
+static_library("setup_lib") {
+  sources = [
+    "setup.cc",
+    "setup_files.cc",
+    "setup_google_update.cc",
+  ]
+}

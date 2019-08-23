@@ -1,0 +1,5 @@
+static_library("service_lib") {
+  sources = [
+    "service_main.cc"
+  ]
+}

@@ -1,0 +1,5 @@
+static_library("client") {
+  sources = [
+    "client/google_update_recovery.cc"
+  ]
+}
