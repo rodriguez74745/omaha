@@ -1,0 +1,34 @@
+import("//build/toolchain/midl.gni")
+
+action("generate_idl") {
+  script = "//tools/generate_omaha3_idl.py"
+
+  inputs = [
+    "omaha3_idl.idl",
+  ]
+  outputs = [
+    "$target_gen_dir/omaha3_idl.idl",
+  ]
+  args = [
+      "--idl_template_file",
+      rebase_path(inputs[0], root_build_dir),
+      "--idl_output_file",
+      rebase_path(outputs[0], root_build_dir),
+  ]
+}
+
+midl("omaha3_idl") {
+  sources = get_target_outputs(":generate_idl")
+  deps = [
+    ":generate_idl",
+  ]
+  writes_tlb = true
+}
+
+static_library("goopdate_min") {
+  sources = [
+    "app_command.cc",
+    "app_command_configuration.cc",
+    "app_command_completion_observer.cc",
+  ]
+}

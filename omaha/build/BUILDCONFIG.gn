@@ -1,0 +1,50 @@
+declare_args() {
+  is_official_build = false
+}
+
+declare_args() {
+  # Debug build. Enabling official builds automatically sets is_debug to false.
+  is_debug = !is_official_build
+}
+
+if (target_os == "") {
+  target_os = host_os
+}
+if (target_cpu == "") {
+  target_cpu = host_cpu
+}
+if (current_cpu == "") {
+  current_cpu = target_cpu
+}
+if (current_os == "") {
+  current_os = target_os
+}
+
+# All binary targets will get this list of configs by default.
+_shared_binary_target_configs = [ 
+  "//build:compiler_defaults",
+  "//build/config:atl_libs",
+  "//build/config:customizations",
+  "//build/config:gtest",
+  "//build/config:proxy_clsid",
+  "//build/config:wtl",
+]
+
+# Apply that default list to the binary target types.
+set_defaults("executable") {
+  configs = _shared_binary_target_configs
+  # Executables get this additional configuration.
+  configs += [ "//build:executable_ldconfig" ]
+}
+set_defaults("static_library") {
+  configs = _shared_binary_target_configs
+}
+set_defaults("shared_library") {
+  configs = _shared_binary_target_configs
+}
+set_defaults("source_set") {
+  configs = _shared_binary_target_configs
+}
+
+
+set_default_toolchain("//build/toolchain:msvc")

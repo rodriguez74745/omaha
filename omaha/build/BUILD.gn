@@ -1,0 +1,165 @@
+config("compiler_defaults") {
+  cflags = [
+    "/arch:IA32",
+    #("", "/analyze:WX-")[win_env.Bit("analysis")],
+    "/D_CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES=1",
+    "/D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES=1",
+    "/D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES_COUNT=1",
+    "/D_HAS_EXCEPTIONS=0",
+    "/D_USING_V110_SDK71_",
+    "/DCOMPILER_MSVC",
+    "/DSTL_MSVC",
+    "/GR-",
+    "/GS",
+    
+    
+    "/permissive-",
+    "/std:c++17",
+    "/W4",
+    "/Wall",
+    "/WX",  # warnings as errors
+    "/Zc:twoPhase-",  # avoids an ICE in service/service_main.h with 16.1.0.
+    "/Zo",  # better debugging support for optimized ce
+
+    # Warnings disabled
+    "/wd4365",  # conversion from 'type_1' to 'type_2', signed/unsigned mismatch
+    "/wd4191",  # unsafe conversion from 'type of expression' to
+                # 'type required'
+
+                  #
+    # Disable the following level 4 warnings below.
+    #
+    "/wd4061",  # enumerate is not explicitly handled by a case label
+    "/wd4127",  # conditional expression is constant
+    "/wd4189",  # local variable is initialized but not referenced
+
+    #
+    # Disable the pedantic warnings below.
+    #
+    "/wd4091",  # 'typedef': ignored on left of when no variable is declared
+    "/wd4191",  # unsafe conversion from 'type of expression' to
+                # 'type required'
+    "/wd4217",  # member template functions cannot be used for
+                # copy-assignment...
+    "/wd4365",  # conversion from 'type_1' to 'type_2',
+                # signed/unsigned mismatch
+    "/wd4371",  # layout of class may have changed from a previous version
+                # of the compiler due to better packing of member
+    "/wd4505",  # unreferenced local function has been removed
+    "/wd4510",  # default constructor could not be generated
+    "/wd4512",  # assignment operator could not be generated
+    "/wd4514",  # unreferenced inline function has been removed
+    "/wd4548",  # expression before comma has no effect
+    "/wd4555",  # expression has no effect
+    "/wd4577",  # 'noexcept' used with no exception handling mode specified;
+                # termination on exception is not guaranteed.
+    "/wd4605",  # '...' specified on current command line, but was not
+                # specified when precompiled header was built.
+    "/wd4610",  # struct can never be instantiated
+    "/wd4619",  # there is no warning number 'number'
+    "/wd4623",  # default constructor could not be generated...
+    "/wd4625",  # copy constructor could not be generated...
+    "/wd4626",  # assignment operator could not be generated...
+    "/wd4668",  # not defined as a preprocessor macro, replacing with '0'.
+    "/wd4710",  # function not inlined
+    "/wd4711",  # function 'function' selected for inline expansion
+    "/wd4738",  # storing 32-bit float result in memory...
+    "/wd4755",  # Conversion rules for arithmetic operations in the
+                # comparison at mean that one branch cannot be executed
+                # in an inlined function.
+    "/wd4768",  # __declspec attributes before linkage specification are
+                # ignored
+    "/wd4774",  # format string expected in argument is not a string literal
+    "/wd4777",  # format string 'requires an argument of type...
+    "/wd4820",  # bytes padding added after construct 'member_name'
+    "/wd4840",  # non-portable use of class as an arg to a variadic function
+    "/wd4986",  # exception specification doesn't match previous declaration
+    "/wd4987",  # nonstandard extension used: 'throw (...)
+    "/wd4995",  # name was marked as #pragma deprecated
+    "/wd4996",  # 'function': was declared deprecated
+    "/wd5026",  # move constructor was implicitly defined as deleted
+                # because a base class move constructor is inaccessible or
+                # deleted.
+    "/wd5027",  # move move assignment operator was implicitly defined
+                # as deleted because a base class move assignment operator
+                # is inaccessible or deleted.
+    "/wd5032",  # detected #pragma warning(push) with no corresponding
+                # #pragma warning(pop) - due to a WinSDK bug in winioctl.h.
+    "/wd5038",  # data member '' will be initialized after data member ''
+    "/wd5042",  # function declarations at block scope cannot be specified
+                # 'inline' in standard C++
+    "/wd5045",  # Compiler will insert Spectre mitigation for memory load
+
+    #
+    # Disable static analysis warnings.
+    #
+    "/wd28159", # Consider using 'GetTickCount64' instead of 'GetTickCount'.
+    "/wd28204", # Inconsistent SAL annotations.
+    "/wd28251", # Inconsistent SAL annotations.
+  ]
+
+  defines = [
+    "PSAPI_VERSION=1",
+    "WINVER=0x0601",
+    "_WIN32_WINNT=0x0601",
+    "WIN32",
+    "_WINDOWS",
+    "UNICODE",
+    "_UNICODE",
+    "WIN32_LEAN_AND_MEAN",
+    "STRICT",
+
+    "SECURITY_WIN32",
+
+    # don't define min and max in windef.h
+    "NOMINMAX",
+
+    # Logging is enabled in all modes for diagnostics purposes.
+    "LOGGING",
+
+    # For chromium headers
+    "ARCH_CPU_X86_FAMILY",
+  ]
+
+  include_dirs = [
+    "//",
+    root_gen_dir,
+    "//third_party/chrome/files/src/",
+    # Do this because in scons all headers were references with "omaha/..." prefix
+    "//../",
+  ]
+}
+
+config("executable_ldconfig") {
+  ldflags = [
+    "/SUBSYSTEM:WINDOWS,5.01",
+    "/RELEASE",
+    "/MAP",
+    "/NODEFAULTLIB",
+    "/DYNAMICBASE",  # Enable ASLR. See http://goo.gl/k2IE.
+    "/NXCOMPAT",  # Enable NX support. See http://goo.gl/k2IE.
+    "/SAFESEH",
+  ]
+  libs = [
+    "advapi32.lib",
+    "kernel32.lib",
+    "ole32.lib",
+    "shell32.lib",
+    "shlwapi.lib",
+    "user32.lib",
+    "wininet.lib",
+    "ws2_32.lib",
+    "wtsapi32.lib",
+    "version.lib",
+  ]
+
+  # CRT
+  if (is_debug) {
+    libs += ["libconcrt.lib", "libcmt.lib", "libcpmt.lib", "libvcruntime.lib", "libucrt.lib"]
+  } else {
+    libs += ["libconcrtd.lib", "libcmtd.lib", "libcpmtd.lib", "libvcruntimed.lib", "libucrtd.lib"]
+  }
+
+  # ATL
+  libs += ["atls.lib"]
+}

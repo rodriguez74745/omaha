@@ -1,0 +1,88 @@
+static_library("lib") {
+  sources = [
+    "apply_tag.cc",
+    "app_util.cc",
+    "atl_regexp.cc",
+    "browser_utils.cc",
+    "cgi.cc",
+    "clipboard.cc",
+    "command_line_parser.cc",
+    "command_line_validator.cc",
+    "commands.cc",
+    "crash_if_specific_error.cc",
+    "debug.cc",
+    "disk.cc",
+    "dynamic_link_kernel32.cc",
+    "encrypt.cc",
+    "environment_block_modifier.cc",
+    "environment_utils.cc",
+    "error.cc",
+    "event_trace_controller.cc",
+    "event_trace_provider.cc",
+    "etw_log_writer.cc",
+    "extractor.cc",
+    "file.cc",
+    "file_reader.cc",
+    "file_ver.cc",
+    "firewall_product_detection.cc",
+    "highres_timer-win32.cc",
+    "logging.cc",
+    "omaha_version.cc",
+    "path.cc",
+    "process.cc",
+    "proc_utils.cc",
+    "program_instance.cc",
+    "queue_timer.cc",
+    "reactor.cc",
+    "reg_key.cc",
+    "regexp.cc",
+    "registry_monitor_manager.cc",
+    "safe_format.cc",
+    "service_utils.cc",
+    "shell.cc",
+    "shutdown_handler.cc",
+    "signatures.cc",
+    "signaturevalidator.cc",
+    "string.cc",
+    "synchronized.cc",
+    "system.cc",
+    "system_info.cc",
+    "thread.cc",
+    "thread_pool.cc",
+    "time.cc",
+    "timer.cc",
+    "user_info.cc",
+    "user_rights.cc",
+    "utils.cc",
+    "vista_utils.cc",
+    "vistautil.cc",
+    "window_utils.cc",
+    "wmi_query.cc",
+    "xml_utils.cc",
+
+    "../third_party/chrome/files/src/base/cpu.cc",
+    "../third_party/chrome/files/src/base/rand_util.cc",
+    "../third_party/chrome/files/src/crypto/rsa_private_key.cc",
+    "../third_party/chrome/files/src/crypto/rsa_private_key_win.cc",
+    "../third_party/chrome/files/src/crypto/signature_creator_win.cc",
+  ]
+}
+
+static_library("security") {
+  cflags = [
+    "/wd4242",  # conversion from 'type1' to 'type2', possible loss of data
+    "/wd4244",  # conversion from 'type1' to 'type2', possible loss of data
+    "/wd4245",  # initializing': conversion from/to signed/unsigned mismatch
+  ]
+
+  sources = [
+    "security/hmac.c",
+    "security/p256.c",
+    "security/p256_ec.c",
+    "security/p256_ecdsa.c",
+    "security/p256_prng.c",
+    "security/sha.c",
+    "security/sha256.c",
+    "security/util.c",
+  ]
+}

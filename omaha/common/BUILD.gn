@@ -1,0 +1,6 @@
+static_library("goopdate_util_lib") {
+    sources = [
+        "config_manager.cc",
+        "goopdate_utils.cc"
+    ]
+}

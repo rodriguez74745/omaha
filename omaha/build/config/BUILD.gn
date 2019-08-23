@@ -1,0 +1,96 @@
+import("//build/toolchain/proxy_util.gni")
+
+config("atl_libs") {
+  include_dirs = [
+    
+  ]
+  defines = [
+    "_ATL_ALL_WARNIN",
+    "_ATL_CSTRING_EXPLICIT_CONSTRUCTO",
+    "_ATL_CSTRING_NO_C",
+    "_ATL_NO_ACLA",
+    "_ATL_NO_DEFAULT_LI",
+    "_ATL_NO_EXCEPTIO",
+    "_ATL_NO_GLOBAL_SOCKET_START",
+    "_ATL_NO_PERF_SUPPO",
+    "_ATL_NO_TRACK_HE",
+    "_ATL_NO_UUID",
+    "_ATL_STATIC_REGIST",
+    "_ATL_XP_TARGETI",
+  ]
+}
+
+config("gtest") {
+  include_dirs = [
+    "//../third_party/googletest/include",
+    "//../third_party/googlemock/include",
+  ]
+}
+
+config("wtl") {
+  include_dirs = [
+    "//../third_party/atl_server/include",
+    "//../third_party/wtl/include",
+  ]
+}
+
+config("customizations") {
+  declare_args() {
+    company_name = "OmahaCompanyName Inc."
+    short_company_name = "OmahaCompanyName"
+    product_name = "Update"
+    domain_base = "google"
+    exe_base_name = "GoogleUpdate"
+
+    # TODO(omaha): Use this throughout the build files where goopdate and
+    # goopdateres are referenced.
+    dll_base_name = "goopdate"
+
+    # "Google LLC" must not be removed from the copyright string. This literal also
+    # appears as LegalCopyright in the VERSIONINFO section of .rc files.
+    # TODO(omaha): Use this variable in .wxs files, etc.
+    #_OMAHA_COPYRIGHT_STRING_ENGLISH = "Copyright 2018 Google LLC"
+    crashhandler_name = "GoogleCrashHandler"
+
+    #TODO: Read some of those from VERSION file
+    oneclick_plugin_name = "npGoogleOneClick"
+    update_plugin_name = "npGoogleUpdate"
+    oneclick_plugin_version = 9
+    update_plugin_version = 3
+  }
+
+  declare_args() {
+    domain = domain_base + ".com" 
+    oneclick_plugin_filename = oneclick_plugin_name + ".dll"
+    update_plugin_filename = update_plugin_name + ".dll"
+  }
+
+  defines = []
+  defines += [
+    "FULL_COMPANY_NAME_ANSI=\"${company_name}\"",
+    "SHORT_COMPANY_NAME_ANSI=\"${short_company_name}\"",
+    "PRODUCT_NAME_ANSI=\"${product_name}\"",
+    "COMPANY_DOMAIN_BASE_ANSI=\"${domain_base}\"",
+    "COMPANY_DOMAIN_ANSI=\"${domain}\"",
+    "OMAHA_APP_NAME_ANSI=\"${short_company_name} ${product_name}\"",
+    "MAIN_EXE_BASE_NAME_ANSI=\"${exe_base_name}\"",
+    "MAIN_DLL_BASE_NAME_ANSI=\"${dll_base_name}\"",
+
+    #"OFFICIAL_BUILD=%d" % win_env.Bit("build_server"),
+    #"TEST_CERTIFICATE=%d" % win_env.Bit("test_certificate"),
+    "ONECLICK_PLUGIN_NAME=_T(\"${oneclick_plugin_name}\")",
+    "ONECLICK_PLUGIN_VERSION_ANSI=\"${oneclick_plugin_version}\"",
+    "ONECLICK_PLUGIN_FILENAME=_T(\"${oneclick_plugin_filename}\"",
+    "UPDATE_PLUGIN_NAME=_T(\"${update_plugin_name}\")",
+    "UPDATE_PLUGIN_VERSION_ANSI=\"${update_plugin_version}\"",
+    "UPDATE_PLUGIN_FILENAME=_T(\"${update_plugin_filename}\")",
+    "CRASH_HANDLER_NAME=_T(\"${crashhandler_name}\")",
+  ]
+}
+
+config("proxy_clsid") {
+  defines = [
+    "PROXY_CLSID_IS_MACHINE=${proxy_clsid_machine}",
+    "PROXY_CLSID_IS_USER=${proxy_clsid_user}",
+  ]
+}

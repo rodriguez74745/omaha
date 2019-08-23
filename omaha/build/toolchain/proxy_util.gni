@@ -1,0 +1,9 @@
+
+declare_args() {
+  proxy_clsid_machine = ""
+  proxy_clsid_user = ""
+}
+
+clsids = exec_script("//tools/proxy_clsid_utils.py", [], "scope")
+proxy_clsid_machine = clsids.proxy_clsid_machine
+proxy_clsid_user = clsids.proxy_clsid_user

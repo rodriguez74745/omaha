@@ -1,0 +1,37 @@
+static_library("core_lib") {
+  sources = [
+    "core.cc",
+    "core_metrics.cc",
+    "google_update_core.cc",
+    "scheduler.cc",
+    "system_monitor.cc",
+  ]
+}
+
+executable("core") {
+  sources = [
+    "winmain.cc"
+  ]
+  deps = [
+    ":core_lib",
+    "//base:lib",
+    "//base:security",
+    "//common:goopdate_util_lib",
+    "//goopdate:goopdate_min",
+    "//goopdate:omaha3_idl",
+    "//statsreport:stats_reporter",
+  ]
+  libs = [
+    "crypt32.lib",
+    "mstask.lib",
+    "netapi32.lib",
+    "oleaut32.lib",
+    "psapi.lib",
+    "rpcns4.lib",
+    "rpcrt4.lib",
+    "shlwapi.lib",
+    "shell32.lib",
+    "taskschd.lib",
+    "userenv.lib",
+  ]
+}

@@ -1,0 +1,18 @@
+static_library("stats_reporter") {
+  sources = [
+    "aggregator.cc",
+    "aggregator-win32.cc",
+    "const-win32.cc",
+    "formatter.cc",
+    "metrics.cc",
+    "persistent_iterator-win32.cc",
+  ]
+  cflags = [
+    "/we4018",
+    "/we4365",
+
+    "/wd4061", # enumerator in switch is not explicitly handled by a
+               # case label
+    "/wd4365", #conversion from '' to '', signed/unsigned mismatch
+  ]
+}

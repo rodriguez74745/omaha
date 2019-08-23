@@ -86,6 +86,15 @@ def _GenerateCustomizationUTText(machine_proxy_clsid, user_proxy_clsid):
       customization_ut_machine_proxy_clsid_string,
       customization_ut_user_proxy_clsid_string)
 
+def _PrintProxyGnText():
+  f = open(proxy_clsid_file_name, "r")
+  clsid_lines = f.readlines()                  
+  f.close()
+  def GetValue(line):
+    return line[line.find("=")+1:-1]
+  print('''proxy_clsid_machine = "%s"
+           proxy_clsid_user = "%s"
+        ''' % (GetValue(clsid_lines[0]), GetValue(clsid_lines[1])))
 
 def _GenerateProxyClsidFile(machine_proxy_clsid,
                             user_proxy_clsid):
@@ -95,7 +104,6 @@ def _GenerateProxyClsidFile(machine_proxy_clsid,
   f_out.write(proxy_clsid_output)
   f_out.close()
 
-
 def _GenerateCustomizationUnitTestFile(machine_proxy_clsid,
                                        user_proxy_clsid):
   customization_ut_output = _GenerateCustomizationUTText(machine_proxy_clsid,
@@ -103,7 +111,6 @@ def _GenerateCustomizationUnitTestFile(machine_proxy_clsid,
   f_out = open(customization_ut_file_name, "w")
   f_out.write(customization_ut_output)
   f_out.close()
-
 
 def _GenerateProxyClsidsFiles():
   if (os.path.isfile(proxy_clsid_file_name) and
@@ -146,6 +153,7 @@ def GetUserProxyClsid():
 def _Main():
   """Generates proxy_clsids.txt and customization unit test file."""
   _GenerateProxyClsidsFiles()
+  _PrintProxyGnText()
 
 
 if __name__ == "__main__":

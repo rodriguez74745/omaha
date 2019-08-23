@@ -255,7 +255,7 @@ ULONGLONG GetVersionFromFile(const CString& file_path) {
 CString GetTempDirForImpersonatedUser() {
   CAccessToken access_token;
   if (!access_token.GetThreadToken(TOKEN_READ)) {
-    return NULL;
+    return L"";
   }
 
   CString temp_dir;
@@ -278,7 +278,7 @@ CString GetTempDirForImpersonatedUser() {
     return temp_dir;
   }
 
-  return NULL;
+  return L"";
 }
 
 
