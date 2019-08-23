@@ -989,43 +989,6 @@ HRESULT TerminateBrowserProcesses(BrowserType type,
   return hr;
 }
 
-HRESULT GetBrowserImagePathFromProcess(BrowserType type,
-                                       uint32 explorer_pid,
-                                       CString* path) {
-  ASSERT1(path);
-
-  if (type == BROWSER_UNKNOWN || type >= BROWSER_MAX) {
-    ASSERT1(false);
-    return E_UNEXPECTED;
-  }
-
-  if (type == BROWSER_DEFAULT) {
-    return GetDefaultBrowserPath(path);
-  }
-
-  CString user_sid;
-  HRESULT hr = Process::GetProcessOwner(explorer_pid, &user_sid);
-  if (FAILED(hr)) {
-    UTIL_LOG(LEVEL_WARNING, (_T("[GetProcessOwner failed.][0x%08x]"), hr));
-    return hr;
-  }
-
-  CString browser_name;
-  hr = BrowserTypeToProcessName(type, &browser_name);
-  if (FAILED(hr)) {
-    UTIL_LOG(LW, (_T("[BrowserTypeToProcessName failed.][0x%08x]"), hr));
-    return hr;
-  }
-
-  hr = Process::GetImagePath(browser_name, user_sid, path);
-  if (FAILED(hr)) {
-    UTIL_LOG(LW, (_T("[GetImagePath failed.][0x%08x]"), hr));
-    return hr;
-  }
-
-  return S_OK;
-}
-
 HRESULT ConvertStringToBrowserType(const CString& text, BrowserType* type) {
   ASSERT1(type != NULL);
 

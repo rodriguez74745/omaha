@@ -157,11 +157,6 @@ HRESULT CreateAndSetVersionedNameInRegistry(bool is_machine,
                                             const TCHAR* prefix,
                                             const TCHAR* value_name);
 
-// Returns the absolute path of the browser image.
-HRESULT GetBrowserImagePathFromProcess(BrowserType type,
-                                       uint32 explorer_pid,
-                                       CString* path);
-
 // Terminates all browser processes for the current user.
 HRESULT TerminateBrowserProcesses(BrowserType type,
                                   TerminateBrowserResult* browser_res,
