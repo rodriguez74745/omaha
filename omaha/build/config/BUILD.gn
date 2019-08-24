@@ -36,7 +36,7 @@ config("wtl") {
 
 config("breakpad") {
   include_dirs = [
-    "//../third_party/breakpad/src",
+    "//third_party/breakpad/src",
   ]
 }
 

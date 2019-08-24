@@ -622,7 +622,7 @@ void InstallerWrapper::GetInstallerResultHelper(
 
     case INSTALLER_RESULT_UNKNOWN:
       if (result.text.IsEmpty()) {
-        result.text = GetMessageForError(result.code, NULL, language);
+        result.text = GetMessageForError(result.code, L"", language);
       }
       break;
     default:

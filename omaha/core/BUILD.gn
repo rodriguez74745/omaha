@@ -14,21 +14,30 @@ executable("core") {
   ]
   deps = [
     ":core_lib",
+    "//base:crx_file",
     "//base:lib",
+    "//base:libprotobuf",
     "//base:logging",
     "//base:security",
     "//common:goopdate_util_lib",
+    "//client:client_lib",
     "//goopdate:goopdate_min",
     "//goopdate:omaha3_idl",
     "//net:net",
+    "//recovery:client",
+    "//service:service_lib",
+    "//setup:metrics",
+    "//setup:setup_lib",
     "//statsreport:stats_reporter",
+    "//third_party/breakpad:breakpad",
+    "//ui:ui_lib",
   ]
   libs = [
     "bits.lib",
     "comctl32.lib",
     "crypt32.lib",
     "iphlpapi.lib",
-    "mstask.lib",
+    "msi.lib",
     "netapi32.lib",
     "oleaut32.lib",
     "psapi.lib",
@@ -36,8 +45,21 @@ executable("core") {
     "rpcrt4.lib",
     "shlwapi.lib",
     "shell32.lib",
-    "taskschd.lib",
     "userenv.lib",
     "uuid.lib",
+    "wintrust.lib",
+  ]
+
+  # Scheduled task deps
+  libs += [
+    "mstask.lib",
+    "taskschd.lib",
+  ]
+
+  # UI deps
+  libs += [
+    "gdi32.lib",
+    "msimg32.lib",
+    "uxtheme.lib",
   ]
 }
