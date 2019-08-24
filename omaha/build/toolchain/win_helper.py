@@ -33,5 +33,5 @@ class WinTool(object):
     open(path, 'w').close()
     return 0
 
-    if __name__ == '__main__':
-      sys.exit(WinTool().Dispatch(sys.argv[1:]))
+if __name__ == '__main__':
+    sys.exit(WinTool().Dispatch(sys.argv[1:]))
