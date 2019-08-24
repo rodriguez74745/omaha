@@ -25,7 +25,7 @@ midl("omaha3_idl") {
   writes_tlb = true
 }
 
-static_library("goopdate_min") {
+static_library("goopdate_lib") {
   sources = [
     "app.cc",
     "app_bundle.cc",
@@ -44,11 +44,11 @@ static_library("goopdate_min") {
     "app_command_ping_delegate.cc",
     "app_manager.cc",
     "app_state.cc",
-    "app_state_error.cc",
-    "app_state_init.cc",
     "app_state_checking_for_update.cc",
     "app_state_download_complete.cc",
     "app_state_downloading.cc",
+    "app_state_error.cc",
+    "app_state_init.cc",
     "app_state_install_complete.cc",
     "app_state_installing.cc",
     "app_state_no_update.cc",
@@ -59,8 +59,8 @@ static_library("goopdate_min") {
     "app_state_waiting_to_install.cc",
     "app_version.cc",
     "application_usage_data.cc",
-    "code_red_check.cc",
     "cocreate_async.cc",
+    "code_red_check.cc",
     "crash.cc",
     "cred_dialog.cc",
     "current_state.cc",
@@ -88,7 +88,67 @@ static_library("goopdate_min") {
     "worker_metrics.cc",
     "worker_utils.cc",
   ]
-  defines = [
-    "_ATL_FREE_THREADED",
+  defines = [ "_ATL_FREE_THREADED" ]
+}
+
+shared_library("goopdate_dll") {
+  sources = [
+    "goopdate.def",
+    "main.cc",
+
+    #resource_res,
+    #version_res,
+  ]
+  deps = [
+    ":goopdate_lib",
+    "//base:crx_file",
+    "//base:lib",
+    "//base:libprotobuf",
+    "//base:logging",
+    "//base:security",
+    "//client:client_lib",
+    "//common:goopdate_util_lib",
+    "//core:core_lib",
+    "//goopdate:goopdate_lib",
+    "//goopdate:omaha3_idl",
+    "//net:net",
+    "//recovery:client",
+    "//service:service_lib",
+    "//setup:metrics",
+    "//setup:setup_lib",
+    "//statsreport:stats_reporter",
+    "//third_party/breakpad:breakpad",
+    "//ui:ui_lib",
+  ]
+  libs = [
+    "bits.lib",
+    "comctl32.lib",
+    "crypt32.lib",
+    "iphlpapi.lib",
+    "msi.lib",
+    "netapi32.lib",
+    "oleaut32.lib",
+    "psapi.lib",
+    "rpcns4.lib",
+    "rpcrt4.lib",
+    "shlwapi.lib",
+    "shell32.lib",
+    "userenv.lib",
+    "uuid.lib",
+    "wintrust.lib",
+    "version.lib",
+  ]
+
+  # Scheduled task deps
+  libs += [
+    "mstask.lib",
+    "taskschd.lib",
+  ]
+
+  # UI deps
+  libs += [
+    "gdi32.lib",
+    "msimg32.lib",
+    "uxtheme.lib",
   ]
 }

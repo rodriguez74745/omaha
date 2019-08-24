@@ -21,7 +21,7 @@ executable("core") {
     "//base:security",
     "//common:goopdate_util_lib",
     "//client:client_lib",
-    "//goopdate:goopdate_min",
+    "//goopdate:goopdate_lib",
     "//goopdate:omaha3_idl",
     "//net:net",
     "//recovery:client",

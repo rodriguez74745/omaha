@@ -1,5 +1,6 @@
 group("all") {
   deps = [
-    "//core"
+    "//core",
+    "//goopdate:goopdate_dll",
   ]
 }
