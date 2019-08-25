@@ -5,6 +5,7 @@ declare_args() {
 declare_args() {
   # Debug build. Enabling official builds automatically sets is_debug to false.
   is_debug = !is_official_build
+  is_win = true
 }
 
 if (target_os == "") {
@@ -21,7 +22,7 @@ if (current_os == "") {
 }
 
 # All binary targets will get this list of configs by default.
-_shared_binary_target_configs = [ 
+_shared_binary_target_configs = [
   "//build:compiler_defaults",
   "//build/config:atl_libs",
   "//build/config:breakpad",
@@ -47,6 +48,5 @@ set_defaults("shared_library") {
 set_defaults("source_set") {
   configs = _shared_binary_target_configs
 }
-
 
 set_default_toolchain("//build/toolchain:msvc")

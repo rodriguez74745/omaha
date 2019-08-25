@@ -91,7 +91,7 @@ static_library("goopdate_lib") {
   defines = [ "_ATL_FREE_THREADED" ]
 }
 
-shared_library("goopdate_dll") {
+shared_library("main_dll") {
   sources = [
     "goopdate.def",
     "main.cc",
@@ -99,6 +99,9 @@ shared_library("goopdate_dll") {
     #resource_res,
     #version_res,
   ]
+
+  output_name = "goopdate"
+
   deps = [
     ":goopdate_lib",
     "//base:crx_file",

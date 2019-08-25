@@ -1,0 +1,46 @@
+import("//build/config/win/manifest.gni")
+
+windows_manifest("goopdate_manifest") {
+  sources = [
+    "GoogleUpdate.manifest",
+  ]
+}
+
+executable("shell_exe") {
+  sources = [
+    "resource.h",
+    "winmain.cc",
+  ]
+
+  output_name = "GoogleUpdate"
+
+  deps = [
+    ":goopdate_manifest",
+  ]
+
+  ldflags = [
+    "/NODEFAULTLIB",
+    "/MERGE:.rdata=.text",
+  ]
+
+  libs = [
+    "delayimp.lib",
+    "advapi32.lib",
+    "crypt32.lib",
+    "kernel32.lib",
+    "oleaut32.lib",
+    "shell32.lib",
+    "shlwapi.lib",
+    "user32.lib",
+    "wintrust.lib",
+    ]
+
+    #rcflags = [
+    #    '/DVERSION_MAJOR=%d' % omaha_version_info.version_major,
+    #    '/DVERSION_MINOR=%d' % omaha_version_info.version_minor,
+    #    '/DVERSION_BUILD=%d' % omaha_version_info.version_build,
+    #    '/DVERSION_PATCH=%d' % omaha_version_info.version_patch,
+    #    '/DVERSION_NUMBER_STRING=\\"%s\\"' % (
+    #        omaha_version_info.GetVersionString()),
+    #]
+}

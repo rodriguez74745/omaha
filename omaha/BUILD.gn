@@ -1,6 +1,7 @@
 group("all") {
   deps = [
     "//core",
-    "//goopdate:goopdate_dll",
+    "//goopdate:main_dll",
+    "//google_update:shell_exe",
   ]
 }
