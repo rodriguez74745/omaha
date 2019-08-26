@@ -28,4 +28,7 @@ static_library("goopdate_util_lib") {
     "xml_const.cc",
     "xml_parser.cc",
   ]
+  deps = [
+    "//goopdate:omaha3_idl",
+  ]
 }

@@ -11,4 +11,7 @@ static_library("client_lib") {
     "shutdown_events.cc",
     "ua.cc",
   ]
+  deps = [
+    "//goopdate:omaha3_idl",
+  ]
 }

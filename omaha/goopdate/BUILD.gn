@@ -89,6 +89,9 @@ static_library("goopdate_lib") {
     "worker_utils.cc",
   ]
   defines = [ "_ATL_FREE_THREADED" ]
+  deps = [
+    "//goopdate:omaha3_idl",
+  ]
 }
 
 shared_library("main_dll") {

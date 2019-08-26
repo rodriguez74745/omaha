@@ -39,7 +39,7 @@ toolchain("msvc") {
         description = "LINK {{output}}"
         default_output_extension = ".exe"
     }
-     tool("solink") {
+    tool("solink") {
       dllname = "{{output_dir}}/{{target_output_name}}{{output_extension}}"  # e.g. foo.dll
       libname = "${dllname}.lib"  # e.g. foo.dll.lib
       pdbname = "${dllname}.pdb"
@@ -53,6 +53,7 @@ toolchain("msvc") {
       outputs = [
         dllname,
         libname,
+        pdbname,
       ]
       link_output = libname
       depend_output = libname

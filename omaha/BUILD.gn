@@ -3,5 +3,6 @@ group("all") {
     "//core",
     "//goopdate:main_dll",
     "//google_update:shell_exe",
+    "//crashhandler:crashhandler_exe"
   ]
 }

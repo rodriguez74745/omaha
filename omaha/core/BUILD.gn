@@ -34,7 +34,6 @@ executable("core") {
   ]
   libs = [
     "bits.lib",
-    "comctl32.lib",
     "crypt32.lib",
     "iphlpapi.lib",
     "msi.lib",
@@ -58,6 +57,7 @@ executable("core") {
 
   # UI deps
   libs += [
+    "comctl32.lib",
     "gdi32.lib",
     "msimg32.lib",
     "uxtheme.lib",
