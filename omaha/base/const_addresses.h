@@ -21,7 +21,6 @@
 #ifndef OMAHA_BASE_CONST_ADDRESSES_H_
 #define OMAHA_BASE_CONST_ADDRESSES_H_
 
-#include <tchar.h>
 #include "omaha/base/constants.h"
 
 namespace omaha {
@@ -29,24 +28,18 @@ namespace omaha {
 // Static string that gives the main Google website address
 // TODO(omaha): Rename this as a connection-check URL. Name should be in caps
 // and not include "Google".
-#define kGoogleHttpServer _T("www.") COMPANY_DOMAIN
+#define kGoogleHttpServer L"www." COMPANY_DOMAIN
 
 // Static string used as an identity for the "Omaha" Google domain.
-// TODO(omaha): Rename this as a plug-in domain.
-const TCHAR* const kGoopdateServer = _T("tools.") COMPANY_DOMAIN;
+const wchar_t kOmahaPluginServerDomain[] = L"tools." COMPANY_DOMAIN;
+
 
 // HTTP protocol prefix
-#define kProtoSuffix              _T("://")
-#define kFileProtoScheme          _T("file")
-#define kHttpProtoScheme          _T("http")
-#define kHttpsProtoScheme         _T("https")
+#define kProtoSuffix              L"://"
+#define kHttpProtoScheme          L"http"
+#define kHttpsProtoScheme         L"https"
 #define kHttpProto                kHttpProtoScheme kProtoSuffix
 #define kHttpsProto               kHttpsProtoScheme kProtoSuffix
-#define kFileProto                kFileProtoScheme kProtoSuffix
-
-// Default ports for proxies
-#define kDefaultHttpProxyPort     80
-#define kDefaultSslProxyPort      443
 
 // The urls below fall back to http for transport failover purposes. In a small
 // number of cases, http requests could succeed even though https requests
@@ -57,37 +50,37 @@ const TCHAR* const kGoopdateServer = _T("tools.") COMPANY_DOMAIN;
 // Update checks.
 // The channel for update checks is secured by using CUP to sign the messages.
 // It does not depend solely on https security in any case.
-const TCHAR* const kUrlUpdateCheck =
-    _T("https://update.") COMPANY_DOMAIN_BASE _T("apis.com/service/update2");
+const wchar_t kUrlUpdateCheck[] =
+    L"https://update." COMPANY_DOMAIN_BASE L"apis.com/service/update2";
 
 // Pings.
-const TCHAR* const kUrlPing =
-  _T("https://update.") COMPANY_DOMAIN_BASE _T("apis.com/service/update2");
+const wchar_t kUrlPing[] =
+  L"https://update." COMPANY_DOMAIN_BASE L"apis.com/service/update2";
 
 // The urls below never fall back to http.
 //
 // Crash reports.
-const TCHAR* const kUrlCrashReport =
-    _T("https://clients2.") COMPANY_DOMAIN _T("/cr/report");
+const wchar_t kUrlCrashReport[] =
+    L"https://clients2." COMPANY_DOMAIN L"/cr/report";
 
 // More information url.
 // Must allow query parameters to be appended to it.
-const TCHAR* const kUrlMoreInfo =
-    _T("https://www.") COMPANY_DOMAIN _T("/support/installer/?");
+const wchar_t kUrlMoreInfo[] =
+    L"https://www." COMPANY_DOMAIN L"/support/installer/?";
 
 // Code Red check url.
-const TCHAR* const kUrlCodeRedCheck =
-    _T("https://clients2.") COMPANY_DOMAIN _T("/service/check2?crx3=true");
+const wchar_t kUrlCodeRedCheck[] =
+    L"https://clients2." COMPANY_DOMAIN L"/service/check2?crx3=true";
 
 // Usage stats url.
-const TCHAR* const kUrlUsageStatsReport =
-    _T("https://clients5.") COMPANY_DOMAIN _T("/tbproxy/usagestats");
+const wchar_t kUrlUsageStatsReport[] =
+    L"https://clients5." COMPANY_DOMAIN L"/tbproxy/usagestats";
 
 #if defined(HAS_DEVICE_MANAGEMENT)
 
 // Device Management API url.
-const TCHAR* const kUrlDeviceManagement =
-    _T("https://m.") COMPANY_DOMAIN _T("/devicemanagement/data/api");
+const wchar_t kUrlDeviceManagement[] =
+    L"https://m." COMPANY_DOMAIN L"/devicemanagement/data/api";
 
 #endif  // defined(HAS_DEVICE_MANAGEMENT)
 
