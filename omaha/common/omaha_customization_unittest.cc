@@ -237,8 +237,7 @@ TEST(OmahaCustomizationTest, Constants_BrandCode) {
 }
 
 TEST(OmahaCustomizationTest, Constants_Addresses) {
-  EXPECT_STREQ(_T("www.google.com"), kGoogleHttpServer);
-  EXPECT_STREQ(_T("tools.google.com"), kGoopdateServer);
+  EXPECT_STREQ(_T("tools.google.com"), kOmahaPluginServerDomain);
   EXPECT_STREQ(_T("https://update.googleapis.com/service/update2"),
                kUrlUpdateCheck);
   EXPECT_STREQ(_T("https://update.googleapis.com/service/update2"), kUrlPing);

@@ -25,14 +25,8 @@
 
 namespace omaha {
 
-// Static string that gives the main Google website address
-// TODO(omaha): Rename this as a connection-check URL. Name should be in caps
-// and not include "Google".
-#define kGoogleHttpServer L"www." COMPANY_DOMAIN
-
 // Static string used as an identity for the "Omaha" Google domain.
 const wchar_t kOmahaPluginServerDomain[] = L"tools." COMPANY_DOMAIN;
-
 
 // HTTP protocol prefix
 #define kProtoSuffix              L"://"
