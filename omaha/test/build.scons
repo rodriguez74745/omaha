@@ -208,33 +208,3 @@ bar_env.Append(
 bar_env.ComponentTestProgram(prog_name='test_bar',
                              source='test_bar.cc',
                              COMPONENT_TEST_RUNNABLE=False)
-
-
-""" This is commented out because it step_test is currently unused,
-    and may be removed. Remove this if/when step_test is removed.
-
-omaha_system_env = env.Clone()
-omaha_system_env.Append(
-    CPPDEFINES = [
-        'UNICODE',
-        '_UNICODE'
-        ],
-    LIBS = [
-        '$LIB_PATH/common.lib',
-        omaha_system_env['atls_libs'][env.Bit('debug')],
-        omaha_system_env['crt_libs'][omaha_system_env.Bit('debug')],,
-        ],
-)
-
-
-omaha_system_env.FilterOut(LINKFLAGS = ['/SUBSYSTEM:WINDOWS'])
-omaha_system_env['LINKFLAGS'] += ['/SUBSYSTEM:CONSOLE']
-
-omaha_system_env.ComponentTestProgram([
-    'omaha_system_test.cc',
-    'step_test.cc',
-    ],
-    COMPONENT_TEST_RUNNABLE=False
-)
-"""
-
