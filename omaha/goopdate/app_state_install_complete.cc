@@ -63,7 +63,7 @@ const PingEvent* AppStateInstallComplete::CreatePingEvent(
       PingEvent::EVENT_UPDATE_COMPLETE :
       PingEvent::EVENT_INSTALL_COMPLETE);
 
-  const bool is_omaha = !!::IsEqualGUID(kGoopdateGuid, app->app_guid());
+  const bool is_omaha = !!::IsEqualGUID(kOmahaGuid, app->app_guid());
 
   const bool can_ping = !is_omaha;
 

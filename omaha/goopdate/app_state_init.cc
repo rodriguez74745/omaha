@@ -33,7 +33,7 @@ void AppStateInit::QueueUpdateCheck(App* app) {
 
   // Omaha should never be part of an app bundle in the install case. This is
   // an important debug check to ensure that duplicate pings are not sent.
-  ASSERT1(!::IsEqualGUID(kGoopdateGuid, app->app_guid()) || app->is_update());
+  ASSERT1(!::IsEqualGUID(kOmahaGuid, app->app_guid()) || app->is_update());
 
   AppManager::Instance()->ResetCurrentStateKey(app->app_guid_string());
 

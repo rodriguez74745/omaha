@@ -1022,7 +1022,7 @@ TEST_F(InstallerWrapperMachineTest,
   EXPECT_SUCCEEDED(RegKey::DeleteKey(kFullFooAppClientKeyPath));
 }
 
-// The use of kGoogleUpdateAppId is the key to this test.
+// The use of kOmahaAppId is the key to this test.
 // Note that the version is not changed - this is the normal self-update case.
 TEST_F(InstallerWrapperUserTest, InstallApp_UpdateOmahaSucceeds) {
   CString arguments;
@@ -1040,7 +1040,7 @@ TEST_F(InstallerWrapperUserTest, InstallApp_UpdateOmahaSucceeds) {
 
   __mutexScope(AppManager::Instance()->GetRegistryStableStateLock());
   EXPECT_SUCCEEDED(iw_->InstallApp(NULL,
-                                   kGoopdateGuid,
+                                   kOmahaGuid,
                                    cmd_exe_path_,
                                    arguments,
                                    _T(""),  // Installer data.
@@ -1079,7 +1079,7 @@ TEST_F(InstallerWrapperUserTest,
 
   __mutexScope(AppManager::Instance()->GetRegistryStableStateLock());
   EXPECT_SUCCEEDED(iw_->InstallApp(NULL,
-                                   kGoopdateGuid,
+                                   kOmahaGuid,
                                    cmd_exe_path_,
                                    arguments,
                                    _T(""),  // Installer data.

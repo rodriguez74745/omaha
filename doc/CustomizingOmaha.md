@@ -54,7 +54,7 @@ We strongly recommend making these changes before you release:
 
   * If your product exposes any settings that are controlled via Group Policy, you may want to move the Omaha GPO settings to the same location as your product.  This is set in `omaha\common\const_group_policy.h`.
 
-  * Change the value of the reference GUID used to identify your fork of Omaha when self-updating.  This is defined in **`kGoopdateGuid`** and **`GOOPDATE_APP_ID`** in `omaha\base\constants.h` and verified in several unit tests.
+  * Change the value of the reference GUID used to identify your fork of Omaha when self-updating.  This is defined in **`kOmahaGuid`** and **`OMAHA_APP_ID`** in `omaha\base\constants.h` and verified in several unit tests.
 
   * Do a general search for strings that reference Google or Google Update, and revise them.  This should include debug logging statements.
 

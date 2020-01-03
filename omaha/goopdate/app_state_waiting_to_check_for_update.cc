@@ -77,7 +77,7 @@ void AppStateWaitingToCheckForUpdate::PreUpdateCheck(
   // The app's EULA has not been accepted, so do not add this app to the update
   // check. This means bundle size does not always match the request size.
 
-  ASSERT1(app->app_guid() != kGoopdateGuid);
+  ASSERT1(app->app_guid() != kOmahaGuid);
 
   // TODO(omaha3): Is there a better way to do this such that we don't need to
   // know about offline installs here?

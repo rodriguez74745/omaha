@@ -41,7 +41,7 @@ CString LoadEnrollmentTokenFromInstall() {
   CString value;
   HRESULT hr = RegKey::GetValue(
       app_registry_utils::GetAppClientStateKey(true /* is_machine */,
-                                               kGoogleUpdateAppId),
+                                               kOmahaAppId),
       kRegValueCloudManagementEnrollmentToken,
       &value);
   return SUCCEEDED(hr) ? value : CString();
@@ -220,7 +220,7 @@ HRESULT DmStorage::StoreRuntimeEnrollmentTokenForInstall() {
   }
   HRESULT hr = RegKey::SetValue(
       app_registry_utils::GetAppClientStateKey(true /* is_machine */,
-                                               kGoogleUpdateAppId),
+                                               kOmahaAppId),
       kRegValueCloudManagementEnrollmentToken,
       enrollment_token_);
   if (FAILED(hr)) {

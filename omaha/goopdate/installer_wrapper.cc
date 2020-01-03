@@ -472,7 +472,7 @@ HRESULT InstallerWrapper::DoExecuteAndWaitForInstaller(
   // to make a decision like this in the InstallerWrapper. Same for all
   // kinds of tests on the call stack above this call that the app_guid is
   // Omaha's guid.
-  if (::IsEqualGUID(app_guid, kGoopdateGuid)) {
+  if (::IsEqualGUID(app_guid, kOmahaGuid)) {
     // Do not wait for the installer when installing Omaha.
     result_info->type = INSTALLER_RESULT_SUCCESS;
     return S_OK;
@@ -645,7 +645,7 @@ HRESULT InstallerWrapper::CheckApplicationRegistration(
   const CString app_guid_string = GuidToString(app_guid);
   CORE_LOG(L2, (_T("[InstallerWrapper::CheckApplicationRegistration][%s]"),
                 app_guid_string));
-  ASSERT(!::IsEqualGUID(kGoopdateGuid, app_guid),
+  ASSERT(!::IsEqualGUID(kOmahaGuid, app_guid),
          (_T("Probably do not want to call this method for Omaha")));
 
   if (registered_version.IsEmpty()) {

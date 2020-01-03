@@ -40,7 +40,7 @@ class PingEventTest : public testing::Test {
     const TCHAR* const kOmahaUserClientStatePath =
         _T("HKCU\\Software\\") SHORT_COMPANY_NAME
         _T("\\") PRODUCT_NAME
-        _T("\\ClientState\\") GOOPDATE_APP_ID;
+        _T("\\ClientState\\") OMAHA_APP_ID;
 
     EXPECT_HRESULT_SUCCEEDED(RegKey::SetValue(kOmahaUserClientStatePath,
                                               kRegValueProductVersion,
@@ -89,7 +89,7 @@ TEST_F(PingEventTest, BuildDownloadCompletePing) {
 
   Ping ping(false, _T("unittest"), _T("InstallSource_Foo"));
   std::vector<CString> apps;
-  apps.push_back(GOOPDATE_APP_ID);
+  apps.push_back(OMAHA_APP_ID);
   ping.LoadAppDataFromRegistry(apps);
   ping.BuildAppsPing(ping_event);
   CleanUpRegistry();
@@ -105,7 +105,7 @@ TEST_F(PingEventTest, BuildDownloadCompletePing) {
       _T("download_time_ms=\"%d\" downloaded=\"%I64u\" total=\"%I64u\" ")
       _T("install_time_ms=\"%d\"/>")
       _T("</app>"),
-      GOOPDATE_APP_ID, kPv, kLang, kBrandCode, kClientId, kIid,
+      OMAHA_APP_ID, kPv, kLang, kBrandCode, kClientId, kIid,
       PingEvent::EVENT_INSTALL_COMPLETE, PingEvent::EVENT_RESULT_SUCCESS,
       error_code, extra_code1, source_url_index,
       update_check_time_ms, download_time_ms, num_bytes_downloaded,
@@ -140,7 +140,7 @@ TEST_F(PingEventTest, BuildDownloadCompletePing_Cached) {
 
   Ping ping(false, _T("unittest"), _T("InstallSource_Foo"));
   std::vector<CString> apps;
-  apps.push_back(GOOPDATE_APP_ID);
+  apps.push_back(OMAHA_APP_ID);
   ping.LoadAppDataFromRegistry(apps);
   ping.BuildAppsPing(ping_event);
   CleanUpRegistry();
@@ -153,7 +153,7 @@ TEST_F(PingEventTest, BuildDownloadCompletePing_Cached) {
       _T("errorcode=\"%d\" extracode1=\"%d\" ")
       _T("download_time_ms=\"15\" downloaded=\"%I64u\" total=\"%I64u\"/>")
       _T("</app>"),
-      GOOPDATE_APP_ID, kPv, kLang, kBrandCode, kClientId, kIid,
+      OMAHA_APP_ID, kPv, kLang, kBrandCode, kClientId, kIid,
       PingEvent::EVENT_INSTALL_COMPLETE, PingEvent::EVENT_RESULT_SUCCESS,
       error_code, extra_code1, app_packages_total_size,
       app_packages_total_size);

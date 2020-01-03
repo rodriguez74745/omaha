@@ -37,7 +37,7 @@ class PingEventCancelTest : public testing::Test {
     const TCHAR* const kOmahaUserClientStatePath =
         _T("HKCU\\Software\\") SHORT_COMPANY_NAME
         _T("\\") PRODUCT_NAME
-        _T("\\ClientState\\") GOOPDATE_APP_ID;
+        _T("\\ClientState\\") OMAHA_APP_ID;
 
     RegKey::DeleteKey(kOmahaUserClientStatePath);
     EXPECT_HRESULT_SUCCEEDED(RegKey::SetValue(kOmahaUserClientStatePath,
@@ -79,7 +79,7 @@ TEST_F(PingEventCancelTest, BuildCancelPing) {
 
   Ping ping(false, _T("unittest"), _T("InstallSource_Foo"));
   std::vector<CString> apps;
-  apps.push_back(GOOPDATE_APP_ID);
+  apps.push_back(OMAHA_APP_ID);
   ping.LoadAppDataFromRegistry(apps);
   ping.BuildAppsPing(ping_event);
 
@@ -93,7 +93,7 @@ TEST_F(PingEventCancelTest, BuildCancelPing) {
       _T("time_since_update_available_ms=\"%d\" ")
       _T("time_since_download_start_ms=\"%d\"/>")
       _T("</app>"),
-      GOOPDATE_APP_ID, kPv, kLang, kBrandCode, kClientId, kIid,
+      OMAHA_APP_ID, kPv, kLang, kBrandCode, kClientId, kIid,
       PingEvent::EVENT_INSTALL_COMPLETE, PingEvent::EVENT_RESULT_SUCCESS,
       error_code, extra_code1, is_bundled, state_when_canelled,
       time_since_update_available_ms, time_since_download_start_ms);

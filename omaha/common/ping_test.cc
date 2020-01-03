@@ -140,7 +140,7 @@ TEST_F(PingTest, BuildOmahaPing) {
 TEST_F(PingTest, BuildAppsPing) {
   const TCHAR* const kOmahaUserClientStatePath =
       _T("HKCU\\Software\\") SHORT_COMPANY_NAME _T("\\") PRODUCT_NAME
-      _T("\\ClientState\\") GOOPDATE_APP_ID;
+      _T("\\ClientState\\") OMAHA_APP_ID;
 
   const CString expected_pv           = _T("1.3.99.0");
   const CString expected_lang         = _T("en");
@@ -190,7 +190,7 @@ TEST_F(PingTest, BuildAppsPing) {
 
   Ping apps_ping(false, _T("unittest"), _T("InstallSource_Foo"));
   std::vector<CString> apps;
-  apps.push_back(GOOPDATE_APP_ID);
+  apps.push_back(OMAHA_APP_ID);
   apps_ping.LoadAppDataFromRegistry(apps);
   apps_ping.BuildAppsPing(ping_event);
 

@@ -1193,7 +1193,7 @@ void App::SetInstallerResult(const InstallerResultInfo& result_info) {
 
       // We do not know whether Goopdate has succeeded because its installer has
       // not completed.
-      if (!::IsEqualGUID(kGoopdateGuid, app_guid_)) {
+      if (!::IsEqualGUID(kOmahaGuid, app_guid_)) {
         AppManager::Instance()->PersistSuccessfulInstall(*this);
       }
       break;

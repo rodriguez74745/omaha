@@ -2546,11 +2546,11 @@ TEST_F(AppManagerMachineTest, SynchronizeClientStateTest) {
 
 // Should not create ClientStateMedium key.
 TEST_F(AppManagerMachineTest, SynchronizeClientState_Omaha) {
-  SynchronizeClientStateTest(kGoogleUpdateAppId);
+  SynchronizeClientStateTest(kOmahaAppId);
 
   const CString client_state_medium_key_name = AppendRegKeyPath(
     ConfigManager::Instance()->machine_registry_client_state_medium(),
-    kGoogleUpdateAppId);
+    kOmahaAppId);
   EXPECT_FALSE(RegKey::HasKey(client_state_medium_key_name));
 }
 

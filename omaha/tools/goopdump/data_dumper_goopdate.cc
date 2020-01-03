@@ -139,7 +139,7 @@ HRESULT DataDumperGoopdate::GetRegisteredVersion(bool is_machine,
                                                  CString* version) {
   HKEY key = NULL;
   LONG res = ::RegOpenKeyEx(is_machine ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-                            GOOPDATE_REG_RELATIVE_CLIENTS GOOPDATE_APP_ID,
+                            GOOPDATE_REG_RELATIVE_CLIENTS OMAHA_APP_ID,
                             0,
                             KEY_READ,
                             &key);

@@ -328,13 +328,13 @@ TEST_F(ConfigManagerNoOverrideTest, RegistryKeys) {
   EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\Clients\\"),
                cm_->registry_clients(true));
 
-  EXPECT_STREQ(_T("HKCU\\") OMAHA_KEY_REL _T("\\Clients\\") GOOPDATE_APP_ID,
+  EXPECT_STREQ(_T("HKCU\\") OMAHA_KEY_REL _T("\\Clients\\") OMAHA_APP_ID,
                cm_->user_registry_clients_goopdate());
-  EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\Clients\\") GOOPDATE_APP_ID,
+  EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\Clients\\") OMAHA_APP_ID,
                cm_->machine_registry_clients_goopdate());
-  EXPECT_STREQ(_T("HKCU\\") OMAHA_KEY_REL _T("\\Clients\\") GOOPDATE_APP_ID,
+  EXPECT_STREQ(_T("HKCU\\") OMAHA_KEY_REL _T("\\Clients\\") OMAHA_APP_ID,
                cm_->registry_clients_goopdate(false));
-  EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\Clients\\") GOOPDATE_APP_ID,
+  EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\Clients\\") OMAHA_APP_ID,
                cm_->registry_clients_goopdate(true));
 
   EXPECT_STREQ(_T("HKCU\\") OMAHA_KEY_REL _T("\\ClientState\\"),
@@ -346,13 +346,13 @@ TEST_F(ConfigManagerNoOverrideTest, RegistryKeys) {
   EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\ClientState\\"),
                cm_->registry_client_state(true));
 
-  EXPECT_STREQ(_T("HKCU\\") OMAHA_KEY_REL _T("\\ClientState\\") GOOPDATE_APP_ID,
+  EXPECT_STREQ(_T("HKCU\\") OMAHA_KEY_REL _T("\\ClientState\\") OMAHA_APP_ID,
                cm_->user_registry_client_state_goopdate());
-  EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\ClientState\\") GOOPDATE_APP_ID,
+  EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\ClientState\\") OMAHA_APP_ID,
                cm_->machine_registry_client_state_goopdate());
-  EXPECT_STREQ(_T("HKCU\\") OMAHA_KEY_REL _T("\\ClientState\\") GOOPDATE_APP_ID,
+  EXPECT_STREQ(_T("HKCU\\") OMAHA_KEY_REL _T("\\ClientState\\") OMAHA_APP_ID,
                cm_->registry_client_state_goopdate(false));
-  EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\ClientState\\") GOOPDATE_APP_ID,
+  EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\ClientState\\") OMAHA_APP_ID,
                cm_->registry_client_state_goopdate(true));
 
   EXPECT_STREQ(_T("HKLM\\") OMAHA_KEY_REL _T("\\ClientStateMedium\\"),
@@ -1533,22 +1533,22 @@ TEST_P(ConfigManagerTest, CanUpdateApp_Auto_DefaultInvalid_NoAppValue) {
 
 TEST_P(ConfigManagerTest, CanUpdateApp_Auto_Omaha_DefaultDisabled) {
   EXPECT_SUCCEEDED(SetPolicy(_T("UpdateDefault"), 0));
-  EXPECT_TRUE(CanUpdateApp(kGoogleUpdateAppId, false));
+  EXPECT_TRUE(CanUpdateApp(kOmahaAppId, false));
 }
 
 TEST_P(ConfigManagerTest, CanUpdateApp_Auto_Omaha_DefaultManualOnly) {
   EXPECT_SUCCEEDED(SetPolicy(_T("UpdateDefault"), 2));
-  EXPECT_TRUE(CanUpdateApp(kGoogleUpdateAppId, false));
+  EXPECT_TRUE(CanUpdateApp(kOmahaAppId, false));
 }
 
 TEST_P(ConfigManagerTest, CanUpdateApp_Auto_Omaha_DefaultAutoOnly) {
   EXPECT_SUCCEEDED(SetPolicy(_T("UpdateDefault"), 3));
-  EXPECT_TRUE(CanUpdateApp(kGoogleUpdateAppId, false));
+  EXPECT_TRUE(CanUpdateApp(kOmahaAppId, false));
 }
 
 TEST_P(ConfigManagerTest, CanUpdateApp_Auto_Omaha_AppDisabled) {
-  EXPECT_SUCCEEDED(SetPolicy(_T("Update") GOOPDATE_APP_ID, 0));
-  EXPECT_TRUE(CanUpdateApp(kGoogleUpdateAppId, false));
+  EXPECT_SUCCEEDED(SetPolicy(_T("Update") OMAHA_APP_ID, 0));
+  EXPECT_TRUE(CanUpdateApp(kOmahaAppId, false));
 }
 
 TEST_P(ConfigManagerTest, CanUpdateApp_Manual_NoGroupPolicy) {
@@ -1764,22 +1764,22 @@ TEST_P(ConfigManagerTest, CanUpdateApp_Manual_DefaultInvalid_NoAppValue) {
 
 TEST_P(ConfigManagerTest, CanUpdateApp_Manual_Omaha_DefaultDisabled) {
   EXPECT_SUCCEEDED(SetPolicy(_T("UpdateDefault"), 0));
-  EXPECT_TRUE(CanUpdateApp(kGoogleUpdateAppId, true));
+  EXPECT_TRUE(CanUpdateApp(kOmahaAppId, true));
 }
 
 TEST_P(ConfigManagerTest, CanUpdateApp_Manual_Omaha_DefaultManualOnly) {
   EXPECT_SUCCEEDED(SetPolicy(_T("UpdateDefault"), 2));
-  EXPECT_TRUE(CanUpdateApp(kGoogleUpdateAppId, true));
+  EXPECT_TRUE(CanUpdateApp(kOmahaAppId, true));
 }
 
 TEST_P(ConfigManagerTest, CanUpdateApp_Manual_Omaha_DefaultAutoOnly) {
   EXPECT_SUCCEEDED(SetPolicy(_T("UpdateDefault"), 3));
-  EXPECT_TRUE(CanUpdateApp(kGoogleUpdateAppId, true));
+  EXPECT_TRUE(CanUpdateApp(kOmahaAppId, true));
 }
 
 TEST_P(ConfigManagerTest, CanUpdateApp_Manual_Omaha_AppDisabled) {
-  EXPECT_SUCCEEDED(SetPolicy(_T("Update") GOOPDATE_APP_ID, 0));
-  EXPECT_TRUE(CanUpdateApp(kGoogleUpdateAppId, true));
+  EXPECT_SUCCEEDED(SetPolicy(_T("Update") OMAHA_APP_ID, 0));
+  EXPECT_TRUE(CanUpdateApp(kOmahaAppId, true));
 }
 
 TEST_P(ConfigManagerTest, GetEffectivePolicyForAppUpdates_DMPolicy) {

@@ -55,7 +55,7 @@ xml::UpdateResponseResult GetUpdateResponseResult(
                                        app_name,
                                        language);
 
-  const bool is_omaha   = !!::IsEqualGUID(kGoopdateGuid, app->app_guid());
+  const bool is_omaha   = !!::IsEqualGUID(kOmahaGuid, app->app_guid());
   const bool has_update = update_response_result.first == S_OK &&
                           app->is_update();
 
@@ -166,7 +166,7 @@ void AppStateCheckingForUpdate::HandleUpdateAvailable(App* app,
   AppManager::Instance()->PersistSuccessfulUpdateCheckResponse(*app, true);
 
   if (app->is_update()) {
-    if (::IsEqualGUID(kGoopdateGuid, app->app_guid())) {
+    if (::IsEqualGUID(kOmahaGuid, app->app_guid())) {
       ++metric_worker_self_updates_available;
     } else {
       ++metric_worker_app_updates_available;

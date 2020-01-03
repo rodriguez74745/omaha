@@ -1782,7 +1782,7 @@ HRESULT PromoteAppEulaAccepted(bool is_machine) {
     }
 
     if (app_registry_utils::IsAppEulaAccepted(is_machine, sub_key_name, true)) {
-      ASSERT1(kGoogleUpdateAppId != sub_key_name);
+      ASSERT1(kOmahaAppId != sub_key_name);
       return install_self::SetEulaAccepted(is_machine);
     }
   }

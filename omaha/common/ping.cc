@@ -105,7 +105,7 @@ void Ping::LoadAppDataFromExtraArgs(const CommandLineExtraArgs& extra_args) {
     apps_data_.push_back(app_data);
   }
 
-  omaha_data_.app_id = kGoogleUpdateAppId;
+  omaha_data_.app_id = kOmahaAppId;
   omaha_data_.language = extra_args.language;
   omaha_data_.brand_code = extra_args.brand_code;
   omaha_data_.client_id = extra_args.client_id;
@@ -114,10 +114,10 @@ void Ping::LoadAppDataFromExtraArgs(const CommandLineExtraArgs& extra_args) {
 }
 
 void Ping::LoadOmahaDataFromRegistry() {
-  omaha_data_.app_id = kGoogleUpdateAppId;
+  omaha_data_.app_id = kOmahaAppId;
   app_registry_utils::GetClientStateData(
       is_machine_,
-      kGoogleUpdateAppId,
+      kOmahaAppId,
       NULL,
       NULL,         // ap is not used yet.
       &omaha_data_.language,
@@ -278,7 +278,7 @@ void Ping::BuildAppsPing(const PingEventPtr& ping_event) {
 HRESULT Ping::SendUsingGoogleUpdate(const CString& request_string,
                                     DWORD wait_timeout_ms) const {
   CString pv;
-  app_registry_utils::GetAppVersion(is_machine_, kGoogleUpdateAppId, &pv);
+  app_registry_utils::GetAppVersion(is_machine_, kOmahaAppId, &pv);
   if (VersionFromString(pv) < kMinOmahaVersionForPingOOP) {
     // Older versions could display a dialog box if they are run with /ping.
     return E_NOTIMPL;

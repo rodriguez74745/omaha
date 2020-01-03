@@ -706,7 +706,7 @@ HRESULT Install(bool is_interactive,
   // the version of the installed Omaha before the setup code ran.
   CString current_version;
   app_registry_utils::GetAppVersion(*is_machine,
-                                    kGoogleUpdateAppId,
+                                    kOmahaAppId,
                                     &current_version);
 
   bool has_setup_succeeded  = false;

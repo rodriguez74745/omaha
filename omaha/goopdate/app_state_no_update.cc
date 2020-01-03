@@ -43,7 +43,7 @@ const PingEvent* AppStateNoUpdate::CreatePingEvent(
   // Creates a ping for deferred updates only.
   if (completion_result == PingEvent::EVENT_RESULT_UPDATE_DEFERRED) {
     // Omaha updates should never be deferred.
-    ASSERT1(!::IsEqualGUID(kGoopdateGuid, app->app_guid()));
+    ASSERT1(!::IsEqualGUID(kOmahaGuid, app->app_guid()));
 
     const PingEvent::Types event_type(PingEvent::EVENT_UPDATE_COMPLETE);
 

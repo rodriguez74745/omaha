@@ -42,7 +42,7 @@ void SetBinaryValue(const TCHAR* path,
 void WriteInstallToken(const TCHAR* enrollment_token) {
   ASSERT_HRESULT_SUCCEEDED(RegKey::SetValue(
       app_registry_utils::GetAppClientStateKey(true /* is_machine */,
-                                               kGoogleUpdateAppId),
+                                               kOmahaAppId),
       kRegValueCloudManagementEnrollmentToken,
       enrollment_token));
 }

@@ -100,7 +100,7 @@ void GoogleUpdateCoreTest::DoLaunchCmdElevatedTests(IUnknown* core_object) {
   // Returns ERROR_BAD_IMPERSONATION_LEVEL when explicit security blanket is not
   // set.
   EXPECT_EQ(HRESULT_FROM_WIN32(ERROR_BAD_IMPERSONATION_LEVEL),
-            google_update_core->LaunchCmdElevated(kGoogleUpdateAppId,
+            google_update_core->LaunchCmdElevated(kOmahaAppId,
                                                   _T("cmd"),
                                                   caller_proc_id,
                                                   &proc_handle));
@@ -116,7 +116,7 @@ void GoogleUpdateCoreTest::DoLaunchCmdElevatedTests(IUnknown* core_object) {
   // Returns GOOPDATE_E_CORE_MISSING_CMD when the command is missing in
   // the registry.
   EXPECT_EQ(GOOPDATE_E_CORE_MISSING_CMD,
-            google_update_core->LaunchCmdElevated(kGoogleUpdateAppId,
+            google_update_core->LaunchCmdElevated(kOmahaAppId,
                                                   _T("cmd"),
                                                   caller_proc_id,
                                                   &proc_handle));
@@ -129,7 +129,7 @@ void GoogleUpdateCoreTest::DoLaunchCmdElevatedTests(IUnknown* core_object) {
                                                   caller_proc_id,
                                                   &proc_handle));
 
-  EXPECT_SUCCEEDED(google_update_core->LaunchCmdElevated(kGoogleUpdateAppId,
+  EXPECT_SUCCEEDED(google_update_core->LaunchCmdElevated(kOmahaAppId,
                                                          _T("fc"),
                                                          caller_proc_id,
                                                          &proc_handle));

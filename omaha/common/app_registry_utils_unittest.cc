@@ -42,19 +42,19 @@ const TCHAR* const kAppUserClientStateMediumPath =
 
 const TCHAR* const kOmahaMachineClientsPath =
     _T("HKLM\\Software\\") SHORT_COMPANY_NAME _T("\\") PRODUCT_NAME
-    _T("\\Clients\\") GOOPDATE_APP_ID;
+    _T("\\Clients\\") OMAHA_APP_ID;
 
 const TCHAR* const kOmahaUserClientsPath =
     _T("HKCU\\Software\\") SHORT_COMPANY_NAME _T("\\") PRODUCT_NAME
-    _T("\\Clients\\") GOOPDATE_APP_ID;
+    _T("\\Clients\\") OMAHA_APP_ID;
 
 const TCHAR* const kOmahaMachineClientStatePath =
     _T("HKLM\\Software\\") SHORT_COMPANY_NAME _T("\\") PRODUCT_NAME
-    _T("\\ClientState\\") GOOPDATE_APP_ID;
+    _T("\\ClientState\\") OMAHA_APP_ID;
 
 const TCHAR* const kOmahaUserClientStatePath =
     _T("HKCU\\Software\\") SHORT_COMPANY_NAME _T("\\") PRODUCT_NAME
-    _T("\\ClientState\\") GOOPDATE_APP_ID;
+    _T("\\ClientState\\") OMAHA_APP_ID;
 
 int GetFirstDayOfWeek(int day) {
   if (day < 0) {
@@ -2402,7 +2402,7 @@ TEST_F(AppRegistryUtilsRegistryProtectedTest, GetAppVersion_User) {
                                             expected_pv));
 
   CString actual_pv;
-  GetAppVersion(false, kGoogleUpdateAppId, &actual_pv);
+  GetAppVersion(false, kOmahaAppId, &actual_pv);
   EXPECT_STREQ(expected_pv, actual_pv);
 }
 
@@ -2414,7 +2414,7 @@ TEST_F(AppRegistryUtilsRegistryProtectedTest, GetAppVersion_Machine) {
                                             expected_pv));
 
   CString actual_pv;
-  GetAppVersion(true, kGoogleUpdateAppId, &actual_pv);
+  GetAppVersion(true, kOmahaAppId, &actual_pv);
   EXPECT_STREQ(expected_pv, actual_pv);
 }
 
@@ -2426,7 +2426,7 @@ TEST_F(AppRegistryUtilsRegistryProtectedTest, GetAppName_User) {
                                             expected_name));
 
   CString actual_name;
-  GetAppName(false, kGoogleUpdateAppId, &actual_name);
+  GetAppName(false, kOmahaAppId, &actual_name);
   EXPECT_STREQ(expected_name, actual_name);
 }
 
@@ -2438,7 +2438,7 @@ TEST_F(AppRegistryUtilsRegistryProtectedTest, GetAppName_Machine) {
                                             expected_name));
 
   CString actual_name;
-  GetAppName(true, kGoogleUpdateAppId, &actual_name);
+  GetAppName(true, kOmahaAppId, &actual_name);
   EXPECT_STREQ(expected_name, actual_name);
 }
 
@@ -2450,7 +2450,7 @@ TEST_F(AppRegistryUtilsRegistryProtectedTest, GetAppLang_User) {
                                             expected_lang));
 
   CString actual_lang;
-  GetAppLang(false, kGoogleUpdateAppId, &actual_lang);
+  GetAppLang(false, kOmahaAppId, &actual_lang);
   EXPECT_STREQ(expected_lang, actual_lang);
 }
 
@@ -2466,7 +2466,7 @@ TEST_F(AppRegistryUtilsRegistryProtectedTest, GetAppLang_Machine) {
                                             _T("ar")));
 
   CString actual_lang;
-  GetAppLang(true, kGoogleUpdateAppId, &actual_lang);
+  GetAppLang(true, kOmahaAppId, &actual_lang);
   EXPECT_STREQ(expected_lang, actual_lang);
 }
 
@@ -2520,7 +2520,7 @@ TEST_P(AppRegistryUtilsRegistryProtectedTest, GetClientStateData) {
                                             kRegValueExperimentLabels,
                                             experiment_label));
   EXPECT_HRESULT_SUCCEEDED(WriteCohort(IsMachine(),
-                                       kGoogleUpdateAppId,
+                                       kOmahaAppId,
                                        expected_cohort));
   EXPECT_HRESULT_SUCCEEDED(
       RegKey::SetValue(GetClientStatePath(),
@@ -2540,7 +2540,7 @@ TEST_P(AppRegistryUtilsRegistryProtectedTest, GetClientStateData) {
   int actual_install_time_diff_sec(0);
 
   GetClientStateData(IsMachine(),
-                     kGoogleUpdateAppId,
+                     kOmahaAppId,
                      &actual_pv,
                      &actual_ap,
                      &actual_lang,
@@ -2573,7 +2573,7 @@ TEST_F(AppRegistryUtilsRegistryProtectedTest, RemoveClientState_Machine) {
   EXPECT_HRESULT_SUCCEEDED(RegKey::SetValue(kAppMachineClientStateMediumPath,
                                             kRegValueProductVersion,
                                             _T("1.1")));
-  RemoveClientState(true, GOOPDATE_APP_ID);
+  RemoveClientState(true, OMAHA_APP_ID);
   EXPECT_TRUE(RegKey::HasValue(kAppMachineClientStatePath,
                                kRegValueProductVersion));
   EXPECT_TRUE(RegKey::HasValue(kAppMachineClientStateMediumPath,
@@ -2592,7 +2592,7 @@ TEST_F(AppRegistryUtilsRegistryProtectedTest, RemoveClientState_User) {
   EXPECT_HRESULT_SUCCEEDED(RegKey::SetValue(kAppUserClientStateMediumPath,
                                             kRegValueProductVersion,
                                             _T("1.1")));
-  RemoveClientState(false, GOOPDATE_APP_ID);
+  RemoveClientState(false, OMAHA_APP_ID);
   EXPECT_TRUE(RegKey::HasValue(kAppUserClientStatePath,
                                kRegValueProductVersion));
   EXPECT_HRESULT_SUCCEEDED(RemoveClientState(false, kAppGuid));

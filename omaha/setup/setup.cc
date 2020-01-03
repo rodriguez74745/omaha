@@ -1329,7 +1329,7 @@ HRESULT Setup::SendUninstallPing() {
 
   const bool is_eula_accepted =
       app_registry_utils::IsAppEulaAccepted(is_machine_,
-                                            kGoogleUpdateAppId,
+                                            kOmahaAppId,
                                             false);
 
   if (!is_eula_accepted) {

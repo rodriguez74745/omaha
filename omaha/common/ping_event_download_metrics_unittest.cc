@@ -37,7 +37,7 @@ class PingEventDownloadMetricsTest : public testing::Test {
     const TCHAR* const kOmahaUserClientStatePath =
         _T("HKCU\\Software\\") SHORT_COMPANY_NAME
         _T("\\") PRODUCT_NAME
-        _T("\\ClientState\\") GOOPDATE_APP_ID;
+        _T("\\ClientState\\") OMAHA_APP_ID;
 
     RegKey::DeleteKey(kOmahaUserClientStatePath);
     EXPECT_HRESULT_SUCCEEDED(RegKey::SetValue(kOmahaUserClientStatePath,
@@ -76,7 +76,7 @@ TEST_F(PingEventDownloadMetricsTest, BuildPing) {
 
   Ping ping(false, _T("unittest"), _T("InstallSource_Foo"));
   std::vector<CString> apps;
-  apps.push_back(GOOPDATE_APP_ID);
+  apps.push_back(OMAHA_APP_ID);
   ping.LoadAppDataFromRegistry(apps);
   ping.BuildAppsPing(ping_event);
 

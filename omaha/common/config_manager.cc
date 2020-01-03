@@ -1329,14 +1329,14 @@ bool ConfigManager::AreUpdatesSuppressedNow() const {
 }
 bool ConfigManager::CanInstallApp(const GUID& app_guid) const {
   // Google Update should never be checking whether it can install itself.
-  ASSERT1(!::IsEqualGUID(kGoopdateGuid, app_guid));
+  ASSERT1(!::IsEqualGUID(kOmahaGuid, app_guid));
 
   return kPolicyDisabled != GetEffectivePolicyForAppInstalls(app_guid);
 }
 
 // Self-updates cannot be disabled.
 bool ConfigManager::CanUpdateApp(const GUID& app_guid, bool is_manual) const {
-  if (::IsEqualGUID(kGoopdateGuid, app_guid)) {
+  if (::IsEqualGUID(kOmahaGuid, app_guid)) {
     return true;
   }
 

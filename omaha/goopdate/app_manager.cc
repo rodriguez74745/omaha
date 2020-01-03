@@ -368,7 +368,7 @@ HRESULT AppManager::CreateClientStateKey(const GUID& app_guid,
     return S_OK;
   }
 
-  if (::IsEqualGUID(kGoopdateGuid, app_guid)) {
+  if (::IsEqualGUID(kOmahaGuid, app_guid)) {
     return S_OK;
   }
 
@@ -1118,7 +1118,7 @@ void AppManager::PersistSuccessfulInstall(const App& app) {
   ASSERT1(IsRegistryStableStateLockedByCaller());
   __mutexScope(registry_access_lock_);
 
-  ASSERT1(!::IsEqualGUID(kGoopdateGuid, app.app_guid()));
+  ASSERT1(!::IsEqualGUID(kOmahaGuid, app.app_guid()));
 
   RegKey client_state_key;
   VERIFY1(SUCCEEDED(CreateClientStateKey(app.app_guid(), &client_state_key)));
@@ -1448,7 +1448,7 @@ HRESULT AppManager::ClearInstallationId(const App& app) const {
 
   if ((ACTIVE_RUN == app.did_run()) ||
       (kMaxLifeOfInstallationIDSec <= app.install_time_diff_sec()) ||
-      (::IsEqualGUID(kGoopdateGuid, app.app_guid()))) {
+      (::IsEqualGUID(kOmahaGuid, app.app_guid()))) {
     CORE_LOG(L1, (_T("[Deleting iid for app][%s]"), app.app_guid_string()));
 
     RegKey client_state_key;

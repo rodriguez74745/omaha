@@ -67,7 +67,7 @@ void RecordUpdateAvailableUsageStats() {
 
   DWORD update_responses(0);
   DWORD64 time_since_first_response_ms(0);
-  app_manager.ReadUpdateAvailableStats(kGoopdateGuid,
+  app_manager.ReadUpdateAvailableStats(kOmahaGuid,
                                        &update_responses,
                                        &time_since_first_response_ms);
   if (update_responses) {
@@ -98,7 +98,7 @@ void RecordUpdateAvailableUsageStats() {
       continue;
     }
 
-    if (::IsEqualGUID(kGoopdateGuid, app_guid)) {
+    if (::IsEqualGUID(kOmahaGuid, app_guid)) {
       continue;
     }
 
@@ -151,7 +151,7 @@ HRESULT AddUninstalledAppsPings(AppBundle* app_bundle) {
     CORE_LOG(L3, (_T("[found uninstalled product][%s]"), app_id));
 
     // Omaha uninstall ping is sent by the Uninstall function in setup.
-    if (app_id == kGoogleUpdateAppId) {
+    if (app_id == kOmahaAppId) {
       CORE_LOG(L3, (_T("[skipping Omaha]")));
       continue;
     }

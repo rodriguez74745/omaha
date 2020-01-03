@@ -198,7 +198,7 @@ HRESULT InstallManager::InstallApp(bool is_machine,
 
       // If this is an Omaha self-update, append a switch to the argument list
       // to set the session ID.
-      if (is_update && ::IsEqualGUID(app_guid, kGoopdateGuid)) {
+      if (is_update && ::IsEqualGUID(app_guid, kOmahaGuid)) {
         SafeCStringAppendFormat(&manifest_arguments, _T(" /%s \"%s\""),
                                 kCmdLineSessionId,
                                 app->app_bundle()->session_id());
@@ -270,7 +270,7 @@ HRESULT InstallManager::InstallApp(bool is_machine,
     ASSERT1(result_info.type == INSTALLER_RESULT_SUCCESS);
     // Skip checking application registration for Omaha self-updates because the
     // installer has not completed.
-    if (!::IsEqualGUID(kGoopdateGuid, app_guid)) {
+    if (!::IsEqualGUID(kOmahaGuid, app_guid)) {
       hr = app_manager.ReadInstallerRegistrationValues(app);
       if (SUCCEEDED(hr)) {
         hr = installer_wrapper->CheckApplicationRegistration(
