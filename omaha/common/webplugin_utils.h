@@ -49,10 +49,6 @@ HRESULT CopyGoopdateToTempDir(const CPath& current_goopdate_path,
 // Launches google_update.exe based on parameters sent with /webplugin.
 HRESULT DoOneClickInstall(const CommandLineArgs& args);
 
-// Creates request string for the webplugin URL check webservice call.
-HRESULT BuildOneClickRequestString(const CommandLineArgs& args,
-                                   CString* request_str);
-
 // Builds up the command line arguments to re-launch google_update.exe
 // when called with /pi.
 HRESULT BuildOneClickWorkerArgs(const CommandLineArgs& args, CString* args_out);
