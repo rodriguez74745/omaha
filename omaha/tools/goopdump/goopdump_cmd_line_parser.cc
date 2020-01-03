@@ -42,7 +42,7 @@ HRESULT ParseGoopdumpCmdLine(int argc,
   valid_params.push_back(_T("monitor"));
   valid_params.push_back(_T("file"));
 
-  for (int i = 0; i < parser.GetSwitchCount(); ++i) {
+  for (int i = 0; i < parser.GetRequiredSwitchCount(); ++i) {
     CString switch_name;
     parser.GetSwitchNameAtIndex(i, &switch_name);
     bool found = false;
@@ -57,18 +57,18 @@ HRESULT ParseGoopdumpCmdLine(int argc,
     }
   }
 
-  if (parser.HasSwitch(_T("file"))) {
+  if (parser.HasRequiredSwitch(_T("file"))) {
     int arg_count = 0;
-    parser.GetSwitchArgumentCount(_T("file"), &arg_count);
+    parser.GetRequiredSwitchArgumentCount(_T("file"), &arg_count);
     if (arg_count != 1) {
       return E_INVALIDARG;
     }
     args->is_write_to_file = true;
-    parser.GetSwitchArgumentValue(_T("file"), 0, &(args->log_filename));
+    parser.GetRequiredSwitchArgumentValue(_T("file"), 0, &(args->log_filename));
   }
 
-  if (parser.GetSwitchCount() == 0 ||
-      (parser.HasSwitch(_T("file")) && parser.GetSwitchCount() == 1)) {
+  if (parser.GetRequiredSwitchCount() == 0 ||
+      (parser.HasRequiredSwitch(_T("file")) && parser.GetRequiredSwitchCount() == 1)) {
     // If you don't pass anything, give them everything except monitoring.
     args->is_dump_general = true;
     args->is_dump_app_manager = true;
@@ -77,21 +77,21 @@ HRESULT ParseGoopdumpCmdLine(int argc,
     args->is_user = true;
   }
 
-  if (parser.HasSwitch(_T("dumpapps"))) {
+  if (parser.HasRequiredSwitch(_T("dumpapps"))) {
     args->is_dump_general = true;
     args->is_dump_app_manager = true;
     args->is_machine = true;
     args->is_user = true;
   }
 
-  if (parser.HasSwitch(_T("oneclick"))) {
+  if (parser.HasRequiredSwitch(_T("oneclick"))) {
     args->is_dump_general = true;
     args->is_dump_oneclick = true;
     args->is_machine = true;
     args->is_user = true;
   }
 
-  if (parser.HasSwitch(_T("monitor"))) {
+  if (parser.HasRequiredSwitch(_T("monitor"))) {
     args->is_monitor = true;
   }
 

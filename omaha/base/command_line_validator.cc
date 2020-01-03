@@ -98,16 +98,16 @@ HRESULT CommandLineValidator::CreateScenarioFromCmdLine(
 
   CreateScenario(scenario_name_str);
 
-  size_t switch_count = parser.GetSwitchCount();
+  size_t switch_count = parser.GetRequiredSwitchCount();
   for (size_t idx_switch = 0; idx_switch < switch_count; ++idx_switch) {
     CString switch_name;
-    hr = parser.GetSwitchNameAtIndex(idx_switch, &switch_name);
+    hr = parser.GetRequiredSwitchNameAtIndex(idx_switch, &switch_name);
     if (FAILED(hr)) {
       return hr;
     }
 
     size_t arg_count = 0;
-    hr = parser.GetSwitchArgumentCount(switch_name, &arg_count);
+    hr = parser.GetRequiredSwitchArgumentCount(switch_name, &arg_count);
     if (FAILED(hr)) {
       return hr;
     }
@@ -155,7 +155,7 @@ HRESULT CommandLineValidator::Validate(
        scenarios_iter != scenarios_.end();
        ++scenarios_iter) {
     // Make sure we have a match for the number of switches in this scenario.
-    size_t parser_switch_count = command_line_parser.GetSwitchCount();
+    size_t parser_switch_count = command_line_parser.GetRequiredSwitchCount();
     size_t scenario_required_switch_count =
         (*scenarios_iter).second.required.size();
     size_t scenario_optional_switch_count =
@@ -187,12 +187,12 @@ bool CommandLineValidator::DoesScenarioMatch(
     CString current_switch_name = (*parameter_iter)->switch_name_;
     // This would probably allow duplicate switches (i.e. /c /c) in a command
     // line.
-    if (!command_line_parser.HasSwitch(current_switch_name)) {
+    if (!command_line_parser.HasRequiredSwitch(current_switch_name)) {
       return false;
     }
 
     size_t arg_count = 0;
-    HRESULT hr = command_line_parser.GetSwitchArgumentCount(current_switch_name,
+    HRESULT hr = command_line_parser.GetRequiredSwitchArgumentCount(current_switch_name,
                                                             &arg_count);
     if (FAILED(hr)) {
       return false;
@@ -204,8 +204,9 @@ bool CommandLineValidator::DoesScenarioMatch(
     }
   }
 
-  size_t parser_optional_switch_count = command_line_parser.GetSwitchCount() -
-                                        scenario_parameters.required.size();
+  size_t parser_optional_switch_count =
+      command_line_parser.GetRequiredSwitchCount() -
+      scenario_parameters.required.size();
   for (parameter_iter = scenario_parameters.optional.begin();
        parser_optional_switch_count != 0 &&
            parameter_iter != scenario_parameters.optional.end();
@@ -213,12 +214,12 @@ bool CommandLineValidator::DoesScenarioMatch(
     CString current_switch_name = (*parameter_iter)->switch_name_;
     // This would probably allow duplicate optional switches (i.e. /oem /oem) in
     // a command line.
-    if (!command_line_parser.HasSwitch(current_switch_name)) {
+    if (!command_line_parser.HasRequiredSwitch(current_switch_name)) {
       continue;
     }
 
     size_t arg_count = 0;
-    HRESULT hr = command_line_parser.GetSwitchArgumentCount(current_switch_name,
+    HRESULT hr = command_line_parser.GetRequiredSwitchArgumentCount(current_switch_name,
                                                             &arg_count);
     if (FAILED(hr)) {
       return false;

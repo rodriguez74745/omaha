@@ -56,24 +56,24 @@ class CommandLineParser {
   // argv[0] is the program name (e.g. foo.exe).
   HRESULT ParseFromArgv(int argc, wchar_t** argv);
 
-  // TODO(Omaha): Name these methods "Required".
   // Gets the number of required switches in the parsed command line.
-  size_t GetSwitchCount() const;
+  size_t GetRequiredSwitchCount() const;
 
   // Returns the required switch at a particular index.
-  HRESULT GetSwitchNameAtIndex(size_t index, CString* switch_name) const;
+  HRESULT GetRequiredSwitchNameAtIndex(size_t index,
+                                       CString* switch_name) const;
 
   // Returns true if a required switch with the name switch_name is found.
-  bool HasSwitch(const CString& switch_name) const;
+  bool HasRequiredSwitch(const CString& switch_name) const;
 
   // Returns the number of required arguments for required switch switch_name.
-  HRESULT GetSwitchArgumentCount(const CString& switch_name,
-                                 size_t* count) const;
+  HRESULT GetRequiredSwitchArgumentCount(const CString& switch_name,
+                                         size_t* count) const;
 
   // Returns the value of a required switch argument at the specified offset.
-  HRESULT GetSwitchArgumentValue(const CString& switch_name,
-                                 size_t argument_index,
-                                 CString* argument_value) const;
+  HRESULT GetRequiredSwitchArgumentValue(const CString& switch_name,
+                                         size_t argument_index,
+                                         CString* argument_value) const;
 
   // Functions that have the same functionality as the above functions,
   // except they operate on the optional switches.

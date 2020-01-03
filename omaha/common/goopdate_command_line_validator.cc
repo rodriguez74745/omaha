@@ -242,14 +242,14 @@ void GoopdateCommandLineValidator::CreateScenario(const TCHAR* cmd_line,
 }
 
 HRESULT GoopdateCommandLineValidator::GetExtraAndAppArgs(const CString& name) {
-  HRESULT hr = parser_->GetSwitchArgumentValue(name,
-                                               0,
-                                               &args_->extra_args_str);
+  HRESULT hr = parser_->GetRequiredSwitchArgumentValue(name,
+                                                       0,
+                                                       &args_->extra_args_str);
   if (FAILED(hr)) {
     return hr;
   }
 
-  hr = parser_->GetSwitchArgumentValue(kCmdLineAppArgs,
+  hr = parser_->GetRequiredSwitchArgumentValue(kCmdLineAppArgs,
                                        0,
                                        &args_->app_args_str);
   if (FAILED(hr)) {
@@ -269,7 +269,7 @@ HRESULT GoopdateCommandLineValidator::OnNoArgs() {
 
 HRESULT GoopdateCommandLineValidator::OnCore() {
   args_->mode = COMMANDLINE_MODE_CORE;
-  args_->is_crash_handler_disabled = parser_->HasSwitch(kCmdLineNoCrashHandler);
+  args_->is_crash_handler_disabled = parser_->HasRequiredSwitch(kCmdLineNoCrashHandler);
 
   return S_OK;
 }
@@ -331,23 +331,23 @@ HRESULT GoopdateCommandLineValidator::OnDemand() {
 
 HRESULT GoopdateCommandLineValidator::OnInstall() {
   args_->mode = COMMANDLINE_MODE_INSTALL;
-  parser_->GetSwitchArgumentValue(kCmdLineInstallSource,
+  parser_->GetRequiredSwitchArgumentValue(kCmdLineInstallSource,
                                   0,
                                   &args_->install_source);
-  parser_->GetSwitchArgumentValue(kCmdLineSessionId,
+  parser_->GetRequiredSwitchArgumentValue(kCmdLineSessionId,
                                   0,
                                   &args_->session_id);
-  args_->is_silent_set = parser_->HasSwitch(kCmdLineSilent);
-  args_->is_enterprise_set = parser_->HasSwitch(kCmdLineEnterprise);
-  args_->is_eula_required_set = parser_->HasSwitch(kCmdLineEulaRequired);
-  args_->is_oem_set = parser_->HasSwitch(kCmdLineOem);
-  args_->is_install_elevated = parser_->HasSwitch(kCmdLineInstallElevated);
+  args_->is_silent_set = parser_->HasRequiredSwitch(kCmdLineSilent);
+  args_->is_enterprise_set = parser_->HasRequiredSwitch(kCmdLineEnterprise);
+  args_->is_eula_required_set = parser_->HasRequiredSwitch(kCmdLineEulaRequired);
+  args_->is_oem_set = parser_->HasRequiredSwitch(kCmdLineOem);
+  args_->is_install_elevated = parser_->HasRequiredSwitch(kCmdLineInstallElevated);
   return GetExtraAndAppArgs(kCmdLineInstall);
 }
 
 HRESULT GoopdateCommandLineValidator::OnUpdate() {
   args_->mode = COMMANDLINE_MODE_UPDATE;
-  parser_->GetSwitchArgumentValue(kCmdLineSessionId,
+  parser_->GetRequiredSwitchArgumentValue(kCmdLineSessionId,
                                   0,
                                   &args_->session_id);
   return S_OK;
@@ -355,20 +355,20 @@ HRESULT GoopdateCommandLineValidator::OnUpdate() {
 
 HRESULT GoopdateCommandLineValidator::OnInstallHandoffWorker() {
   args_->mode = COMMANDLINE_MODE_HANDOFF_INSTALL;
-  parser_->GetSwitchArgumentValue(kCmdLineInstallSource,
+  parser_->GetRequiredSwitchArgumentValue(kCmdLineInstallSource,
                                   0,
                                   &args_->install_source);
-  parser_->GetSwitchArgumentValue(kCmdLineSessionId,
+  parser_->GetRequiredSwitchArgumentValue(kCmdLineSessionId,
                                   0,
                                   &args_->session_id);
-  args_->is_silent_set = parser_->HasSwitch(kCmdLineSilent);
-  args_->is_enterprise_set = parser_->HasSwitch(kCmdLineEnterprise);
-  args_->is_eula_required_set = parser_->HasSwitch(kCmdLineEulaRequired);
-  args_->is_offline_set = parser_->HasSwitch(kCmdLineLegacyOfflineInstall) ||
-                          parser_->HasSwitch(kCmdLineOfflineDir);
+  args_->is_silent_set = parser_->HasRequiredSwitch(kCmdLineSilent);
+  args_->is_enterprise_set = parser_->HasRequiredSwitch(kCmdLineEnterprise);
+  args_->is_eula_required_set = parser_->HasRequiredSwitch(kCmdLineEulaRequired);
+  args_->is_offline_set = parser_->HasRequiredSwitch(kCmdLineLegacyOfflineInstall) ||
+                          parser_->HasRequiredSwitch(kCmdLineOfflineDir);
 
   CString offline_dir;
-  parser_->GetSwitchArgumentValue(kCmdLineOfflineDir, 0, &offline_dir);
+  parser_->GetRequiredSwitchArgumentValue(kCmdLineOfflineDir, 0, &offline_dir);
   if (!offline_dir.IsEmpty()) {
     CommandLineBuilder builder(COMMANDLINE_MODE_HANDOFF_INSTALL);
     HRESULT hr = builder.SetOfflineDirName(offline_dir);
@@ -384,8 +384,8 @@ HRESULT GoopdateCommandLineValidator::OnInstallHandoffWorker() {
 
 HRESULT GoopdateCommandLineValidator::OnUpdateApps() {
   args_->mode = COMMANDLINE_MODE_UA;
-  args_->is_machine_set = parser_->HasSwitch(kCmdLineMachine);
-  parser_->GetSwitchArgumentValue(kCmdLineInstallSource,
+  args_->is_machine_set = parser_->HasRequiredSwitch(kCmdLineMachine);
+  parser_->GetRequiredSwitchArgumentValue(kCmdLineInstallSource,
                                   0,
                                   &args_->install_source);
   return S_OK;
@@ -393,11 +393,11 @@ HRESULT GoopdateCommandLineValidator::OnUpdateApps() {
 
 HRESULT GoopdateCommandLineValidator::OnReportCrash() {
   args_->mode = COMMANDLINE_MODE_REPORTCRASH;
-  args_->is_machine_set = parser_->HasSwitch(kCmdLineMachine);
-  parser_->GetSwitchArgumentValue(kCmdLineCustomInfoFileName,
+  args_->is_machine_set = parser_->HasRequiredSwitch(kCmdLineMachine);
+  parser_->GetRequiredSwitchArgumentValue(kCmdLineCustomInfoFileName,
                                   0,
                                   &args_->custom_info_filename);
-  return parser_->GetSwitchArgumentValue(kCmdLineReport,
+  return parser_->GetRequiredSwitchArgumentValue(kCmdLineReport,
                                          0,
                                          &args_->crash_filename);
 }
@@ -405,14 +405,14 @@ HRESULT GoopdateCommandLineValidator::OnReportCrash() {
 HRESULT GoopdateCommandLineValidator::OnReportCrashInteractive() {
   args_->mode = COMMANDLINE_MODE_REPORTCRASH;
   args_->is_interactive_set = true;
-  args_->is_machine_set = parser_->HasSwitch(kCmdLineMachine);
-  return parser_->GetSwitchArgumentValue(kCmdLineInteractive,
+  args_->is_machine_set = parser_->HasRequiredSwitch(kCmdLineMachine);
+  return parser_->GetRequiredSwitchArgumentValue(kCmdLineInteractive,
                                          0,
                                          &args_->crash_filename);
 }
 
 HRESULT GoopdateCommandLineValidator::OnWebPlugin() {
-  HRESULT hr = parser_->GetSwitchArgumentValue(kCmdLineInstallSource,
+  HRESULT hr = parser_->GetRequiredSwitchArgumentValue(kCmdLineInstallSource,
                                                0,
                                                &args_->install_source);
   if (FAILED(hr)) {
@@ -429,7 +429,7 @@ HRESULT GoopdateCommandLineValidator::OnWebPlugin() {
   args_->mode = COMMANDLINE_MODE_WEBPLUGIN;
 
   CString urldomain;
-  hr = parser_->GetSwitchArgumentValue(kCmdLineWebPlugin,
+  hr = parser_->GetRequiredSwitchArgumentValue(kCmdLineWebPlugin,
                                        0,
                                        &urldomain);
   if (FAILED(hr)) {
@@ -441,7 +441,7 @@ HRESULT GoopdateCommandLineValidator::OnWebPlugin() {
   }
 
   CString webplugin_args;
-  hr = parser_->GetSwitchArgumentValue(kCmdLineWebPlugin,
+  hr = parser_->GetRequiredSwitchArgumentValue(kCmdLineWebPlugin,
                                        1,
                                        &webplugin_args);
   if (FAILED(hr)) {
@@ -457,7 +457,7 @@ HRESULT GoopdateCommandLineValidator::OnCodeRed() {
 
 HRESULT GoopdateCommandLineValidator::OnRecover() {
   args_->mode = COMMANDLINE_MODE_RECOVER;
-  return parser_->GetSwitchArgumentValue(
+  return parser_->GetRequiredSwitchArgumentValue(
       kCmdLineRecover,
       0,
       &args_->code_red_metainstaller_path);
@@ -466,7 +466,7 @@ HRESULT GoopdateCommandLineValidator::OnRecover() {
 HRESULT GoopdateCommandLineValidator::OnRecoverMachine() {
   args_->mode = COMMANDLINE_MODE_RECOVER;
   args_->is_machine_set = true;
-  return parser_->GetSwitchArgumentValue(
+  return parser_->GetRequiredSwitchArgumentValue(
       kCmdLineMachine,
       0,
       &args_->code_red_metainstaller_path);
@@ -479,7 +479,7 @@ HRESULT GoopdateCommandLineValidator::OnUninstall() {
 
 HRESULT GoopdateCommandLineValidator::OnRegisterProduct() {
   args_->mode = COMMANDLINE_MODE_REGISTER_PRODUCT;
-  parser_->GetSwitchArgumentValue(kCmdLineInstallSource,
+  parser_->GetRequiredSwitchArgumentValue(kCmdLineInstallSource,
                                   0,
                                   &args_->install_source);
   return GetExtraAndAppArgs(kCmdLineRegisterProduct);
@@ -492,7 +492,7 @@ HRESULT GoopdateCommandLineValidator::OnUnregisterProduct() {
 
 HRESULT GoopdateCommandLineValidator::OnPing() {
   args_->mode = COMMANDLINE_MODE_PING;
-  return parser_->GetSwitchArgumentValue(kCmdLinePing,
+  return parser_->GetRequiredSwitchArgumentValue(kCmdLinePing,
                                          0,
                                          &args_->ping_string);
 }

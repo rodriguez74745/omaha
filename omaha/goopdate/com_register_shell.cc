@@ -106,7 +106,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     return hr;
   }
 
-  const bool is_machine = !parser.HasSwitch(_T("user"));
-  const bool is_register = !parser.HasSwitch(_T("unregister"));
+  const bool is_machine = !parser.HasRequiredSwitch(_T("user"));
+  const bool is_register = !parser.HasRequiredSwitch(_T("unregister"));
   return omaha::RegisterOrUnregisterProxies64(is_machine, is_register);
 }

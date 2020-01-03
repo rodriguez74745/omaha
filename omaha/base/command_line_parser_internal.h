@@ -31,10 +31,10 @@ class CommandLineParserArgs {
   CommandLineParserArgs() {}
   ~CommandLineParserArgs() {}
 
-  typedef std::vector<CString> StringVector;
-  typedef StringVector::const_iterator StringVectorIter;
-  typedef std::map<CString, StringVector > SwitchAndArgumentsMap;
-  typedef SwitchAndArgumentsMap::const_iterator SwitchAndArgumentsMapIter;
+  using StringVector = std::vector<CString>;
+  using StringVectorIter = StringVector::const_iterator;
+  using SwitchAndArgumentsMap = std::map<CString, StringVector>;
+  using SwitchAndArgumentsMapIter = SwitchAndArgumentsMap::const_iterator;
 
   // Gets the number of switches in the parsed command line.  Will return 0 for
   // count if a parse has not occurred.

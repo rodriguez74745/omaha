@@ -85,7 +85,7 @@ HRESULT CommandLineParserArgs::GetSwitchNameAtIndex(size_t index,
     return E_INVALIDARG;
   }
 
-  SwitchAndArgumentsMapIter iter = switch_arguments_.begin();
+  auto iter = switch_arguments_.begin();
   for (size_t i = 0; i < index; ++i) {
     ++iter;
   }
@@ -103,7 +103,7 @@ HRESULT CommandLineParserArgs::GetSwitchArgumentCount(
   CString switch_name_lower = switch_name;
   switch_name_lower.MakeLower();
 
-  SwitchAndArgumentsMapIter iter = switch_arguments_.find(switch_name_lower);
+  auto iter = switch_arguments_.find(switch_name_lower);
   if (iter == switch_arguments_.end()) {
     return E_INVALIDARG;
   }
@@ -131,7 +131,7 @@ HRESULT CommandLineParserArgs::GetSwitchArgumentValue(
     return E_INVALIDARG;
   }
 
-  SwitchAndArgumentsMapIter iter = switch_arguments_.find(switch_name_lower);
+  auto iter = switch_arguments_.find(switch_name_lower);
   if (iter == switch_arguments_.end()) {
     return E_INVALIDARG;
   }
@@ -152,7 +152,7 @@ CommandLineParser::~CommandLineParser() {
 
 HRESULT CommandLineParser::ParseFromString(const wchar_t* command_line) {
   CString command_line_str(command_line);
-  command_line_str.Trim(_T(" "));
+  command_line_str.Trim(L" ");
 
   if (command_line_str.IsEmpty()) {
     // If the first arg to CommandLineToArgvW "is an empty string the function
@@ -211,7 +211,7 @@ HRESULT CommandLineParser::ParseFromArgv(int argc, wchar_t** argv) {
   for (int i = 1; i < argc; ++i) {
     HRESULT hr = S_OK;
     CString token = argv[i];
-    token.Trim(_T(" "));
+    token.Trim(L" ");
     if (IsSwitch(token)) {
       hr = StripSwitchNameFromArgv(token, &current_switch_name);
       if (FAILED(hr)) {
@@ -219,7 +219,7 @@ HRESULT CommandLineParser::ParseFromArgv(int argc, wchar_t** argv) {
       }
       hr = AddSwitch(current_switch_name);
       if (FAILED(hr)) {
-        CORE_LOG(LE, (_T("[AddSwitch failed][%s][0x%x]"),
+        CORE_LOG(LE, (L"[AddSwitch failed][%s][0x%x]",
                       current_switch_name, hr));
         return hr;
       }
@@ -231,7 +231,7 @@ HRESULT CommandLineParser::ParseFromArgv(int argc, wchar_t** argv) {
       }
       hr = AddOptionalSwitch(current_switch_name);
       if (FAILED(hr)) {
-        CORE_LOG(LE, (_T("[AddOptionalSwitch failed][%s][0x%x]"),
+        CORE_LOG(LE, (L"[AddOptionalSwitch failed][%s][0x%x]",
                       current_switch_name, hr));
         return hr;
       }
@@ -242,7 +242,7 @@ HRESULT CommandLineParser::ParseFromArgv(int argc, wchar_t** argv) {
           AddSwitchArgument(current_switch_name, token);
 
       if (FAILED(hr)) {
-        CORE_LOG(LE, (_T("[Adding switch argument failed][%d][%s][%s][0x%x]"),
+        CORE_LOG(LE, (L"[Adding switch argument failed][%d][%s][%s][0x%x]",
                       is_optional_switch, current_switch_name, token, hr));
         return hr;
       }
@@ -265,15 +265,15 @@ bool CommandLineParser::IsSwitch(const CString& param) const {
   // * foo.exe /switch "/x y"  -- /switch is a switch, '/x y' is an arg and it
   //   will get here _without_ the quotes.
   // If param_str starts with / and contains no spaces, then it's a switch.
-  return ((param[0] == _T('/')) || (param[0] == _T('-'))) &&
-          (param.Find(_T(" ")) == -1) &&
-          (param.Find(_T("%20")) == -1);
+  return ((param[0] == L'/') || (param[0] == L'-')) &&
+          (param.Find(L" ") == -1) &&
+          (param.Find(L"%20") == -1);
 }
 
 bool CommandLineParser::IsOptionalSwitch(const CString& param) const {
   // Optional switches must have a prefix ([/) or ([-), and at least one
   // character.
-  return param[0] == _T('[') && IsSwitch(param.Right(param.GetLength() - 1));
+  return param[0] == L'[' && IsSwitch(param.Right(param.GetLength() - 1));
 }
 
 HRESULT CommandLineParser::StripSwitchNameFromArgv(const CString& param,
@@ -285,7 +285,7 @@ HRESULT CommandLineParser::StripSwitchNameFromArgv(const CString& param,
   }
 
   *switch_name = param.Right(param.GetLength() - 1);
-  switch_name->Trim(_T(" "));
+  switch_name->Trim(L" ");
   switch_name->MakeLower();
   return S_OK;
 }
@@ -317,33 +317,34 @@ HRESULT CommandLineParser::AddSwitchArgument(const CString& switch_name,
   return required_args_->AddSwitchArgument(switch_name, argument_value);
 }
 
-size_t CommandLineParser::GetSwitchCount() const {
+size_t CommandLineParser::GetRequiredSwitchCount() const {
   return required_args_->GetSwitchCount();
 }
 
-bool CommandLineParser::HasSwitch(const CString& switch_name) const {
+bool CommandLineParser::HasRequiredSwitch(const CString& switch_name) const {
   return required_args_->HasSwitch(switch_name);
 }
 
 // The value at a particular index may change if switch_names are added
 // since we're using a map underneath.  But this keeps us from having to write
 // an interator and expose it externally.
-HRESULT CommandLineParser::GetSwitchNameAtIndex(size_t index,
-                                                CString* switch_name) const {
+HRESULT CommandLineParser::GetRequiredSwitchNameAtIndex(
+    size_t index,
+    CString* switch_name) const {
   return required_args_->GetSwitchNameAtIndex(index, switch_name);
 }
 
-HRESULT CommandLineParser::GetSwitchArgumentCount(const CString& switch_name,
-                                                  size_t* count) const {
+HRESULT CommandLineParser::GetRequiredSwitchArgumentCount(
+    const CString& switch_name,
+    size_t* count) const {
   return required_args_->GetSwitchArgumentCount(switch_name, count);
 }
 
-HRESULT CommandLineParser::GetSwitchArgumentValue(
+HRESULT CommandLineParser::GetRequiredSwitchArgumentValue(
     const CString& switch_name,
     size_t argument_index,
     CString* argument_value) const {
-  return required_args_->GetSwitchArgumentValue(switch_name,
-                                                argument_index,
+  return required_args_->GetSwitchArgumentValue(switch_name, argument_index,
                                                 argument_value);
 }
 

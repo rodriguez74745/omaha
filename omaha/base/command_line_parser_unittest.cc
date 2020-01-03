@@ -23,7 +23,7 @@ namespace omaha {
 TEST(CommandLineParserTest, ParseFromString_NullString) {
   CommandLineParser parser;
   EXPECT_SUCCEEDED(parser.ParseFromString(NULL));
-  EXPECT_EQ(0, parser.GetSwitchCount());
+  EXPECT_EQ(0, parser.GetRequiredSwitchCount());
 }
 
 // This will succeed since the CommandLineToArgvW function returns the
@@ -31,7 +31,7 @@ TEST(CommandLineParserTest, ParseFromString_NullString) {
 TEST(CommandLineParserTest, ParseFromString_EmptyString) {
   CommandLineParser parser;
   EXPECT_SUCCEEDED(parser.ParseFromString(_T("")));
-  EXPECT_EQ(0, parser.GetSwitchCount());
+  EXPECT_EQ(0, parser.GetRequiredSwitchCount());
 }
 
 // This will succeed since the CommandLineToArgvW function returns the
@@ -50,36 +50,36 @@ TEST(CommandLineParserTest, CallFunctionsBeforeParse) {
   CommandLineParser parser;
   size_t arg_count = 0;
   CString arg_value;
-  EXPECT_FALSE(parser.HasSwitch(_T("foo")));
-  EXPECT_EQ(0, parser.GetSwitchCount());
-  EXPECT_FAILED(parser.GetSwitchArgumentCount(_T("foo"), &arg_count));
-  EXPECT_FAILED(parser.GetSwitchArgumentValue(_T("foo"), 0, &arg_value));
+  EXPECT_FALSE(parser.HasRequiredSwitch(_T("foo")));
+  EXPECT_EQ(0, parser.GetRequiredSwitchCount());
+  EXPECT_FAILED(parser.GetRequiredSwitchArgumentCount(_T("foo"), &arg_count));
+  EXPECT_FAILED(parser.GetRequiredSwitchArgumentValue(_T("foo"), 0, &arg_value));
 }
 
 TEST(CommandLineParserTest, ParseFromString_ProgramNameOnly) {
   CommandLineParser parser;
   EXPECT_SUCCEEDED(parser.ParseFromString(_T("myprog.exe")));
-  EXPECT_EQ(0, parser.GetSwitchCount());
+  EXPECT_EQ(0, parser.GetRequiredSwitchCount());
 }
 
 TEST(CommandLineParserTest, ValidateSwitchMixedCase) {
   CommandLineParser parser;
   EXPECT_SUCCEEDED(parser.ParseFromString(_T("myprog.exe /FooP")));
-  EXPECT_EQ(1, parser.GetSwitchCount());
-  EXPECT_TRUE(parser.HasSwitch(_T("foop")));
-  EXPECT_TRUE(parser.HasSwitch(_T("FooP")));
-  EXPECT_TRUE(parser.HasSwitch(_T("fOOp")));
-  EXPECT_TRUE(parser.HasSwitch(_T("FOOP")));
-  EXPECT_FALSE(parser.HasSwitch(_T("blAH")));
+  EXPECT_EQ(1, parser.GetRequiredSwitchCount());
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("foop")));
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("FooP")));
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("fOOp")));
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("FOOP")));
+  EXPECT_FALSE(parser.HasRequiredSwitch(_T("blAH")));
 }
 
 TEST(CommandLineParserTest, ParseFromString_OneSwitchNoArgs) {
   CommandLineParser parser;
   size_t arg_count = 0;
   EXPECT_SUCCEEDED(parser.ParseFromString(_T("myprog.exe /foo")));
-  EXPECT_EQ(1, parser.GetSwitchCount());
-  EXPECT_TRUE(parser.HasSwitch(_T("foo")));
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentCount(_T("foo"), &arg_count));
+  EXPECT_EQ(1, parser.GetRequiredSwitchCount());
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("foo")));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentCount(_T("foo"), &arg_count));
   EXPECT_EQ(0, arg_count);
 }
 
@@ -88,11 +88,11 @@ TEST(CommandLineParserTest, ParseFromString_OneSwitchOneArg) {
   size_t arg_count = 0;
   CString arg_value;
   EXPECT_SUCCEEDED(parser.ParseFromString(_T("myprog.exe /foo bar")));
-  EXPECT_EQ(1, parser.GetSwitchCount());
-  EXPECT_TRUE(parser.HasSwitch(_T("foo")));
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentCount(_T("foo"), &arg_count));
+  EXPECT_EQ(1, parser.GetRequiredSwitchCount());
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("foo")));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentCount(_T("foo"), &arg_count));
   EXPECT_EQ(1, arg_count);
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentValue(_T("foo"), 0, &arg_value));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentValue(_T("foo"), 0, &arg_value));
   EXPECT_STREQ(_T("bar"), arg_value);
 }
 
@@ -101,13 +101,13 @@ TEST(CommandLineParserTest, ParseFromString_OneSwitchTwoArgs) {
   size_t arg_count = 0;
   CString arg_value;
   EXPECT_SUCCEEDED(parser.ParseFromString(_T("myprog.exe /foo bar baz")));
-  EXPECT_EQ(1, parser.GetSwitchCount());
-  EXPECT_TRUE(parser.HasSwitch(_T("foo")));
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentCount(_T("foo"), &arg_count));
+  EXPECT_EQ(1, parser.GetRequiredSwitchCount());
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("foo")));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentCount(_T("foo"), &arg_count));
   EXPECT_EQ(2, arg_count);
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentValue(_T("foo"), 0, &arg_value));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentValue(_T("foo"), 0, &arg_value));
   EXPECT_STREQ(_T("bar"), arg_value);
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentValue(_T("foo"), 1, &arg_value));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentValue(_T("foo"), 1, &arg_value));
   EXPECT_STREQ(_T("baz"), arg_value);
 }
 
@@ -116,12 +116,12 @@ TEST(CommandLineParserTest, ParseFromString_TwoSwitchesNoArgs) {
   size_t arg_count = 0;
   CString arg_value;
   EXPECT_SUCCEEDED(parser.ParseFromString(_T("myprog.exe /foo /bar")));
-  EXPECT_EQ(2, parser.GetSwitchCount());
-  EXPECT_TRUE(parser.HasSwitch(_T("foo")));
-  EXPECT_TRUE(parser.HasSwitch(_T("bar")));
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentCount(_T("foo"), &arg_count));
+  EXPECT_EQ(2, parser.GetRequiredSwitchCount());
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("foo")));
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("bar")));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentCount(_T("foo"), &arg_count));
   EXPECT_EQ(0, arg_count);
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentCount(_T("bar"), &arg_count));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentCount(_T("bar"), &arg_count));
   EXPECT_EQ(0, arg_count);
 }
 
@@ -130,14 +130,14 @@ TEST(CommandLineParserTest, ParseFromString_TwoSwitchesOneArgNoArg) {
   size_t arg_count = 0;
   CString arg_value;
   EXPECT_SUCCEEDED(parser.ParseFromString(_T("myprog.exe /foo blech /bar")));
-  EXPECT_EQ(2, parser.GetSwitchCount());
-  EXPECT_TRUE(parser.HasSwitch(_T("foo")));
-  EXPECT_TRUE(parser.HasSwitch(_T("bar")));
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentCount(_T("foo"), &arg_count));
+  EXPECT_EQ(2, parser.GetRequiredSwitchCount());
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("foo")));
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("bar")));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentCount(_T("foo"), &arg_count));
   EXPECT_EQ(1, arg_count);
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentValue(_T("foo"), 0, &arg_value));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentValue(_T("foo"), 0, &arg_value));
   EXPECT_STREQ(_T("blech"), arg_value);
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentCount(_T("bar"), &arg_count));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentCount(_T("bar"), &arg_count));
   EXPECT_EQ(0, arg_count);
 }
 
@@ -146,13 +146,13 @@ TEST(CommandLineParserTest, ParseFromString_ArgInQuotesWithLeadingSlash) {
   size_t arg_count = 0;
   CString arg_value;
   EXPECT_SUCCEEDED(parser.ParseFromString(_T("f.exe /pi \"arg\" \"/sw x\"")));
-  EXPECT_EQ(1, parser.GetSwitchCount());
-  EXPECT_TRUE(parser.HasSwitch(_T("pi")));
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentCount(_T("pi"), &arg_count));
+  EXPECT_EQ(1, parser.GetRequiredSwitchCount());
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("pi")));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentCount(_T("pi"), &arg_count));
   EXPECT_EQ(2, arg_count);
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentValue(_T("pi"), 0, &arg_value));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentValue(_T("pi"), 0, &arg_value));
   EXPECT_STREQ(_T("arg"), arg_value);
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentValue(_T("pi"), 1, &arg_value));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentValue(_T("pi"), 1, &arg_value));
   EXPECT_STREQ(_T("/sw x"), arg_value);
 }
 
@@ -164,11 +164,11 @@ TEST(CommandLineParserTest, ParseFromString_SpaceInPathWithQuotes) {
   CString arg_value;
   EXPECT_SUCCEEDED(
       parser.ParseFromString(_T("\"C:\\Space In Path\\myprog.exe\" /foo bar")));
-  EXPECT_EQ(1, parser.GetSwitchCount());
-  EXPECT_TRUE(parser.HasSwitch(_T("foo")));
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentCount(_T("foo"), &arg_count));
+  EXPECT_EQ(1, parser.GetRequiredSwitchCount());
+  EXPECT_TRUE(parser.HasRequiredSwitch(_T("foo")));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentCount(_T("foo"), &arg_count));
   EXPECT_EQ(1, arg_count);
-  EXPECT_SUCCEEDED(parser.GetSwitchArgumentValue(_T("foo"), 0, &arg_value));
+  EXPECT_SUCCEEDED(parser.GetRequiredSwitchArgumentValue(_T("foo"), 0, &arg_value));
   EXPECT_STREQ(_T("bar"), arg_value);
 }
 
