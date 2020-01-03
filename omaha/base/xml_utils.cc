@@ -33,7 +33,7 @@ namespace omaha {
 
 XMLFQName::XMLFQName() {}
 
-XMLFQName::XMLFQName(const TCHAR* u, const TCHAR* b)
+XMLFQName::XMLFQName(const wchar_t* u, const wchar_t* b)
     : uri(u && ::_tcslen(u) ? u : 0),
       base(b && ::_tcslen(b) ? b : 0) {}
 
@@ -49,20 +49,20 @@ HRESULT CoCreateSafeDOMDocument(IXMLDOMDocument** my_xmldoc) {
   CComPtr<IXMLDOMDocument> xml_doc;
   HRESULT hr = xml_doc.CoCreateInstance(__uuidof(DOMDocument2));
   if (FAILED(hr)) {
-    UTIL_LOG(LE, (_T("[xml_doc.CoCreateInstance failed][0x%x]"), hr));
+    UTIL_LOG(LE, (L"[xml_doc.CoCreateInstance failed][0x%x]", hr));
     return hr;
   }
   ASSERT1(xml_doc);
   hr = xml_doc->put_resolveExternals(VARIANT_FALSE);
   if (FAILED(hr)) {
-    UTIL_LOG(LE, (_T("[put_resolveExternals failed][0x%x]"), hr));
+    UTIL_LOG(LE, (L"[put_resolveExternals failed][0x%x]", hr));
     return hr;
   }
   *my_xmldoc = xml_doc.Detach();
   return S_OK;
 }
 
-HRESULT LoadXMLFromFile(const TCHAR* xmlfile,
+HRESULT LoadXMLFromFile(const wchar_t* xmlfile,
                         bool preserve_whitespace,
                         IXMLDOMDocument** xmldoc) {
   ASSERT1(xmlfile);
@@ -73,19 +73,19 @@ HRESULT LoadXMLFromFile(const TCHAR* xmlfile,
   CComPtr<IXMLDOMDocument> my_xmldoc;
   HRESULT hr = CoCreateSafeDOMDocument(&my_xmldoc);
   if (FAILED(hr)) {
-    UTIL_LOG(LE, (_T("[CoCreateSafeDOMDocument failed][0x%x]"), hr));
+    UTIL_LOG(LE, (L"[CoCreateSafeDOMDocument failed][0x%x]", hr));
     return hr;
   }
   hr = my_xmldoc->put_preserveWhiteSpace(VARIANT_BOOL(preserve_whitespace));
   if (FAILED(hr)) {
-    UTIL_LOG(LE, (_T("[put_preserveWhiteSpace failed][0x%x]"), hr));
+    UTIL_LOG(LE, (L"[put_preserveWhiteSpace failed][0x%x]", hr));
     return hr;
   }
   CComBSTR my_xmlfile(xmlfile);
   VARIANT_BOOL is_successful(VARIANT_FALSE);
   hr = my_xmldoc->load(CComVariant(my_xmlfile), &is_successful);
   if (FAILED(hr)) {
-    UTIL_LOG(LE, (_T("[my_xmldoc->load failed][0x%x]"), hr));
+    UTIL_LOG(LE, (L"[my_xmldoc->load failed][0x%x]", hr));
     return hr;
   }
   if (!is_successful) {
@@ -93,14 +93,14 @@ HRESULT LoadXMLFromFile(const TCHAR* xmlfile,
     CString error_message;
     hr = GetXMLParseError(my_xmldoc, &error);
     if (FAILED(hr)) {
-      UTIL_LOG(LE, (_T("[GetXMLParseError failed][0x%x]"), hr));
+      UTIL_LOG(LE, (L"[GetXMLParseError failed][0x%x]", hr));
       return hr;
     }
     ASSERT1(error);
     HRESULT error_code = 0;
     hr = InterpretXMLParseError(error, &error_code, &error_message);
     if (FAILED(hr)) {
-      UTIL_LOG(LE, (_T("[InterpretXMLParseError failed][0x%x]"), hr));
+      UTIL_LOG(LE, (L"[InterpretXMLParseError failed][0x%x]", hr));
       return hr;
     }
     UTIL_LOG(LE, (L"[LoadXMLFromFile '%s'][parse error: %s]",
@@ -112,7 +112,7 @@ HRESULT LoadXMLFromFile(const TCHAR* xmlfile,
   return S_OK;
 }
 
-HRESULT LoadXMLFromMemory(const TCHAR* xmlstring,
+HRESULT LoadXMLFromMemory(const wchar_t* xmlstring,
                           bool preserve_whitespace,
                           IXMLDOMDocument** xmldoc) {
   ASSERT1(xmlstring);
@@ -171,7 +171,7 @@ HRESULT LoadXMLFromRawData(const std::vector<byte>& xmldata,
     ASSERT1(error);
     HRESULT error_code = 0;
     RET_IF_FAILED(InterpretXMLParseError(error, &error_code, &error_message));
-    UTIL_LOG(LE, (_T("[LoadXMLFromRawData][parse error: %s]"), error_message));
+    UTIL_LOG(LE, (L"[LoadXMLFromRawData][parse error: %s]", error_message));
     ASSERT1(FAILED(error_code));
     return FAILED(error_code) ? error_code : CI_E_XML_LOAD_ERROR;
   }
@@ -179,7 +179,7 @@ HRESULT LoadXMLFromRawData(const std::vector<byte>& xmldata,
   return S_OK;
 }
 
-HRESULT SaveXMLToFile(IXMLDOMDocument* xmldoc, const TCHAR* xmlfile) {
+HRESULT SaveXMLToFile(IXMLDOMDocument* xmldoc, const wchar_t* xmlfile) {
   ASSERT1(xmldoc);
   ASSERT1(xmlfile);
 
@@ -311,33 +311,11 @@ HRESULT GetXMLFQName(IXMLDOMNode* node, XMLFQName* name) {
   return S_OK;
 }
 
-CString XMLFQNameToString(const XMLFQName& fqname) {
-  CString name;
-  if (fqname.uri) {
-    name += fqname.uri;
-    name += L":";
-  }
-  if (fqname.base) {
-    name += fqname.base;
-  }
-  return name;
-}
-
-CString NodeToString(IXMLDOMNode* pnode) {
-  ASSERT1(pnode);
-
-  XMLFQName node_name;
-  if (SUCCEEDED(GetXMLFQName(pnode, &node_name))) {
-    return XMLFQNameToString(node_name);
-  }
-  return L"";
-}
-
 HRESULT CreateXMLNode(IXMLDOMDocument* xmldoc,
                       int node_type,
-                      const TCHAR* node_name,
-                      const TCHAR* namespace_uri,
-                      const TCHAR* text,
+                      const wchar_t* node_name,
+                      const wchar_t* namespace_uri,
+                      const wchar_t* text,
                       IXMLDOMNode** node_out) {
   ASSERT1(xmldoc);
   ASSERT1(node_name);
@@ -366,30 +344,6 @@ HRESULT CreateXMLNode(IXMLDOMDocument* xmldoc,
   return S_OK;
 }
 
-HRESULT AppendXMLNode(IXMLDOMNode* xmlnode, IXMLDOMNode* new_child) {
-  ASSERT1(xmlnode);
-  ASSERT1(new_child);
-
-  CComPtr<IXMLDOMNode> useless;
-  RET_IF_FAILED(xmlnode->appendChild(new_child, &useless));
-  return S_OK;
-}
-
-HRESULT AppendXMLNode(IXMLDOMNode* xmlnode, const TCHAR* text) {
-  ASSERT1(xmlnode);
-  // text can be NULL
-
-  if (text && text[0]) {
-    CComPtr<IXMLDOMDocument> xml_doc;
-    CComPtr<IXMLDOMText> text_node;
-    RET_IF_FAILED(xmlnode->get_ownerDocument(&xml_doc));
-    ASSERT1(xml_doc);
-    RET_IF_FAILED(xml_doc->createTextNode(CComBSTR(text), &text_node));
-    RET_IF_FAILED(AppendXMLNode(xmlnode, text_node));
-  }
-  return S_OK;
-}
-
 HRESULT AddXMLAttributeNode(IXMLDOMNode* xmlnode, IXMLDOMAttribute* new_child) {
   ASSERT1(xmlnode);
   ASSERT1(new_child);
@@ -402,8 +356,8 @@ HRESULT AddXMLAttributeNode(IXMLDOMNode* xmlnode, IXMLDOMAttribute* new_child) {
 }
 
 HRESULT AddXMLAttributeNode(IXMLDOMElement* xmlelement,
-                            const TCHAR* attribute_name,
-                            const TCHAR* attribute_value) {
+                            const wchar_t* attribute_name,
+                            const wchar_t* attribute_value) {
   ASSERT1(xmlelement);
   ASSERT1(attribute_name);
   // attribute_value can be NULL
@@ -414,9 +368,9 @@ HRESULT AddXMLAttributeNode(IXMLDOMElement* xmlelement,
 }
 
 HRESULT AddXMLAttributeNode(IXMLDOMNode* xmlnode,
-                            const TCHAR* attribute_namespace,
-                            const TCHAR* attribute_name,
-                            const TCHAR* attribute_value) {
+                            const wchar_t* attribute_namespace,
+                            const wchar_t* attribute_name,
+                            const wchar_t* attribute_value) {
   ASSERT1(xmlnode);
   ASSERT1(attribute_name);
   // attribute_namespace can be NULL
@@ -436,85 +390,6 @@ HRESULT AddXMLAttributeNode(IXMLDOMNode* xmlnode,
   CComQIPtr<IXMLDOMAttribute> attribute(attribute_node);
   ASSERT1(attribute);
   RET_IF_FAILED(AddXMLAttributeNode(xmlnode, attribute));
-  return S_OK;
-}
-
-HRESULT RemoveXMLChildrenByName(IXMLDOMNode* xmlnode, const XMLFQName& name) {
-  ASSERT1(xmlnode);
-
-  CComPtr<IXMLDOMNodeList> node_list;
-  RET_IF_FAILED(xmlnode->get_childNodes(&node_list));
-  ASSERT1(node_list);
-
-  bool found = false;
-  do {
-    found = false;
-    long count = 0;   // NOLINT
-    RET_IF_FAILED(node_list->get_length(&count));
-    RET_IF_FAILED(node_list->reset());
-
-    for (int i = 0; i < count; ++i) {
-      CComPtr<IXMLDOMNode> child_node, useless;
-      RET_IF_FAILED(node_list->get_item(i, &child_node));
-      ASSERT1(child_node);
-      if (EqualXMLName(child_node, name)) {
-        RET_IF_FAILED(xmlnode->removeChild(child_node, &useless));
-        // Start loop over: the list is "alive" and changes when you remove a
-        // node from it. Yes this seems to be n^2 but in fact we expect at
-        // most one each of <Hash> and/or <Size> nodes.
-        found = true;
-        break;
-      }
-    }
-  } while (found);
-
-  return S_OK;
-}
-
-HRESULT GetXMLChildByName(IXMLDOMElement* xmlnode,
-                          const TCHAR* child_name,
-                          IXMLDOMNode** xmlchild) {
-  ASSERT1(xmlnode);
-  ASSERT1(child_name);
-  ASSERT1(xmlchild);
-  ASSERT1(!*xmlchild);
-
-  *xmlchild = NULL;
-  CComPtr<IXMLDOMNodeList> node_list;
-  long node_list_length = 0;    // NOLINT
-  RET_IF_FAILED(xmlnode->getElementsByTagName(CComBSTR(child_name),
-                                              &node_list));
-  ASSERT1(node_list);
-  RET_IF_FAILED(node_list->get_length(&node_list_length));
-  if (node_list_length <= 0) {
-    return HRESULT_FROM_WIN32(ERROR_NOT_FOUND);
-  }
-  // Should only be one child node with name we're looking for.
-  if (node_list_length > 1) {
-    return CI_E_INVALID_MANIFEST;
-  }
-  RET_IF_FAILED(node_list->reset());
-  RET_IF_FAILED(node_list->get_item(0, xmlchild));
-  ASSERT1(*xmlchild);
-  return S_OK;
-}
-
-HRESULT InsertXMLBeforeItem(IXMLDOMNode* xmlnode,
-                            IXMLDOMNode* new_child,
-                            long item_number) {  // NOLINT
-  ASSERT1(xmlnode);
-  ASSERT1(new_child);
-
-  CComPtr<IXMLDOMNodeList> child_list;
-  CComPtr<IXMLDOMNode> refchild, useless;
-
-  RET_IF_FAILED(xmlnode->get_childNodes(&child_list));
-  ASSERT1(child_list);
-  RET_IF_FAILED(child_list->get_item(item_number, &refchild));
-  ASSERT1(refchild);
-  RET_IF_FAILED(xmlnode->insertBefore(new_child,
-                                      CComVariant(refchild),
-                                      &useless));
   return S_OK;
 }
 
@@ -561,7 +436,7 @@ HRESULT InterpretXMLParseError(IXMLDOMParseError* parse_error,
 
   // TODO(omaha): think about replacing this call to _snwprintf with a
   // safestring function.
-  std::vector<TCHAR> s(size_estimate);
+  std::vector<wchar_t> s(size_estimate);
   _snwprintf_s(&s.front(), size_estimate, _TRUNCATE,
                L"%d(%d) : error 0x%08lx: %s\n  %s",
                line, char_pos, *error_code,
@@ -574,37 +449,7 @@ HRESULT InterpretXMLParseError(IXMLDOMParseError* parse_error,
   return S_OK;
 }
 
-HRESULT GetNumChildren(IXMLDOMNode* node, int* num_children) {
-  ASSERT1(node);
-  ASSERT1(num_children);
-
-  *num_children = 0;
-  CComPtr<IXMLDOMNodeList> children;
-  RET_IF_FAILED(node->get_childNodes(&children));
-  ASSERT1(children);
-
-  long len = 0;   // NOLINT
-  RET_IF_FAILED(children->get_length(&len));
-  *num_children = len;
-  return S_OK;
-}
-
-int GetNumAttributes(IXMLDOMNode* node) {
-  ASSERT1(node);
-
-  CComPtr<IXMLDOMNamedNodeMap> attr_map;
-  if (FAILED(node->get_attributes(&attr_map))) {
-    return 0;
-  }
-  ASSERT1(attr_map);
-  long len = 0;   // NOLINT
-  if (FAILED(attr_map->get_length(&len))) {
-    return 0;
-  }
-  return len;
-}
-
-bool HasAttribute(IXMLDOMNode* node, const TCHAR* attr_name) {
+bool HasAttribute(IXMLDOMNode* node, const wchar_t* attr_name) {
   ASSERT1(node);
   ASSERT1(attr_name);
 
@@ -626,73 +471,10 @@ bool HasAttribute(IXMLDOMNode* node, const TCHAR* attr_name) {
   return attribute_node != NULL;
 }
 
-HRESULT ReadAttributeAt(IXMLDOMNode* node,
-                        int index,
-                        CString* attr_name,
-                        CString* attr_value) {
-  CORE_LOG(L4, (_T("[ReadAttributeAt][%d]"), index));
-  ASSERT1(node);
-  ASSERT1(attr_name);
-  ASSERT1(attr_value);
-
-  CComPtr<IXMLDOMNamedNodeMap> attributes;
-  HRESULT hr = node->get_attributes(&attributes);
-  if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[get_attributes failed][0x%x]"), hr));
-    return hr;
-  }
-
-  if (!attributes) {
-    CORE_LOG(LE, (_T("[Msxml S_FALSE return]")));
-    return E_FAIL;  // Protect against msxml S_FALSE return.
-  }
-
-  CComPtr<IXMLDOMNode> attr;
-  hr = attributes->get_item(index, &attr);
-  if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[get_item failed][0x%x]"), hr));
-    return hr;
-  }
-
-  if (!attr) {
-    CORE_LOG(LE, (_T("[Msxml S_FALSE return]")));
-    return E_FAIL;  // Protect against msxml S_FALSE return.
-  }
-
-  CComBSTR node_name;
-  hr = attr->get_nodeName(&node_name);
-  if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[get_nodeName failed][0x%x]"), hr));
-    return hr;
-  }
-
-  if (!node_name.Length()) {
-    CORE_LOG(LE, (_T("[Msxml S_FALSE return]")));
-    return E_FAIL;  // Protect against msxml S_FALSE return.
-  }
-
-  CComBSTR node_value;
-  hr = attr->get_text(&node_value);
-  if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[get_text failed][0x%x]"), hr));
-    return hr;
-  }
-
-  if (!node_value.Length()) {
-    CORE_LOG(LE, (_T("[Msxml S_FALSE return]")));
-    return E_FAIL;  // Protect against msxml S_FALSE return.
-  }
-
-  *attr_name = node_name;
-  *attr_value = node_value;
-
-  return S_OK;
-}
-
 HRESULT ReadBooleanAttribute(IXMLDOMNode* node,
-                             const TCHAR* attr_name,
+                             const wchar_t* attr_name,
                              bool* value) {
-  CORE_LOG(L4, (_T("[ReadBooleanAttribute][%s]"), attr_name));
+  CORE_LOG(L4, (L"[ReadBooleanAttribute][%s]", attr_name));
   ASSERT1(node);
   ASSERT1(attr_name);
   ASSERT1(value);
@@ -700,14 +482,14 @@ HRESULT ReadBooleanAttribute(IXMLDOMNode* node,
   CComBSTR node_value;
   HRESULT hr = ReadAttribute(node, attr_name, &node_value);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[ReadAttribute failed][%s][0x%x]"), attr_name, hr));
+    CORE_LOG(LE, (L"[ReadAttribute failed][%s][0x%x]", attr_name, hr));
     return hr;
   }
 
-  hr = String_StringToBool(static_cast<TCHAR*>(node_value),
+  hr = String_StringToBool(static_cast<wchar_t*>(node_value),
                            value);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[String_StringToBool failed][0x%x]"), hr));
+    CORE_LOG(LE, (L"[String_StringToBool failed][0x%x]", hr));
     return hr;
   }
 
@@ -715,9 +497,9 @@ HRESULT ReadBooleanAttribute(IXMLDOMNode* node,
 }
 
 HRESULT ReadIntAttribute(IXMLDOMNode* node,
-                         const TCHAR* attr_name,
+                         const wchar_t* attr_name,
                          int* value) {
-  CORE_LOG(L4, (_T("[ReadIntAttribute][%s]"), attr_name));
+  CORE_LOG(L4, (L"[ReadIntAttribute][%s]", attr_name));
   ASSERT1(node);
   ASSERT1(attr_name);
   ASSERT1(value);
@@ -725,21 +507,21 @@ HRESULT ReadIntAttribute(IXMLDOMNode* node,
   CComBSTR node_value;
   HRESULT hr = ReadAttribute(node, attr_name, &node_value);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[ReadAttribute failed][%s][0x%x]"), attr_name, hr));
+    CORE_LOG(LE, (L"[ReadAttribute failed][%s][0x%x]", attr_name, hr));
     return hr;
   }
 
   if (!String_StringToDecimalIntChecked(
-          static_cast<const TCHAR*>(node_value), value)) {
+          static_cast<const wchar_t*>(node_value), value)) {
           return GOOPDATEXML_E_STRTOUINT;
   }
   return S_OK;
 }
 
 HRESULT ReadGuidAttribute(IXMLDOMNode* node,
-                          const TCHAR* attr_name,
+                          const wchar_t* attr_name,
                           GUID* value) {
-  CORE_LOG(L4, (_T("[ReadGuidAttribute][%s]"), attr_name));
+  CORE_LOG(L4, (L"[ReadGuidAttribute][%s]", attr_name));
   ASSERT1(node);
   ASSERT1(attr_name);
   ASSERT1(value);
@@ -747,13 +529,13 @@ HRESULT ReadGuidAttribute(IXMLDOMNode* node,
   CComBSTR node_value;
   HRESULT hr = ReadAttribute(node, attr_name, &node_value);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[ReadAttribute failed][%s][0x%x]"), attr_name, hr));
+    CORE_LOG(LE, (L"[ReadAttribute failed][%s][0x%x]", attr_name, hr));
     return hr;
   }
 
-  hr = StringToGuidSafe(static_cast<TCHAR*>(node_value), value);
+  hr = StringToGuidSafe(static_cast<wchar_t*>(node_value), value);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[StringToGuidSafe failed][0x%x]"), hr));
+    CORE_LOG(LE, (L"[StringToGuidSafe failed][0x%x]", hr));
     return hr;
   }
 
@@ -761,9 +543,9 @@ HRESULT ReadGuidAttribute(IXMLDOMNode* node,
 }
 
 HRESULT ReadStringAttribute(IXMLDOMNode* node,
-                            const TCHAR* attr_name,
+                            const wchar_t* attr_name,
                             CString* value) {
-  CORE_LOG(L4, (_T("[ReadStringAttribute][%s]"), attr_name));
+  CORE_LOG(L4, (L"[ReadStringAttribute][%s]", attr_name));
   ASSERT1(node);
   ASSERT1(attr_name);
   ASSERT1(value);
@@ -771,20 +553,20 @@ HRESULT ReadStringAttribute(IXMLDOMNode* node,
   CComBSTR node_value;
   HRESULT hr = ReadAttribute(node, attr_name, &node_value);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[ReadAttribute failed][%s][0x%x]"), attr_name, hr));
+    CORE_LOG(LE, (L"[ReadAttribute failed][%s][0x%x]", attr_name, hr));
     return hr;
   }
 
   // Will extract the underlying string.
-  *value = static_cast<TCHAR*>(node_value);
+  *value = static_cast<wchar_t*>(node_value);
 
   return S_OK;
 }
 
 HRESULT ReadAttribute(IXMLDOMNode* node,
-                      const TCHAR* attr_name,
+                      const wchar_t* attr_name,
                       BSTR* value) {
-  CORE_LOG(L4, (_T("[ReadAttribute][%s]"), attr_name));
+  CORE_LOG(L4, (L"[ReadAttribute][%s]", attr_name));
   ASSERT1(node);
   ASSERT1(attr_name);
   ASSERT1(value);
@@ -793,12 +575,12 @@ HRESULT ReadAttribute(IXMLDOMNode* node,
   CComPtr<IXMLDOMNamedNodeMap> attributes;
   HRESULT hr = node->get_attributes(&attributes);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[get_attributes failed][0x%x]"), hr));
+    CORE_LOG(LE, (L"[get_attributes failed][0x%x]", hr));
     return hr;
   }
 
   if (!attributes) {
-    CORE_LOG(LE, (_T("[Msxml S_FALSE return]")));
+    CORE_LOG(LE, (L"[Msxml S_FALSE return]"));
     return E_FAIL;  // Protect against msxml S_FALSE return.
   }
 
@@ -810,23 +592,23 @@ HRESULT ReadAttribute(IXMLDOMNode* node,
   hr = attributes->getNamedItem(static_cast<BSTR>(temp_attr_name),
                                 &attribute_node);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[getNamedItem failed][0x%x]"), hr));
+    CORE_LOG(LE, (L"[getNamedItem failed][0x%x]", hr));
     return hr;
   }
 
   if (!attribute_node) {
-    CORE_LOG(LE, (_T("[Msxml S_FALSE return]")));
+    CORE_LOG(LE, (L"[Msxml S_FALSE return]"));
     return E_FAIL;  // Protect against msxml S_FALSE return.
   }
 
   hr = attribute_node->get_nodeValue(&node_value);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[get_nodeValue failed][0x%x]"), hr));
+    CORE_LOG(LE, (L"[get_nodeValue failed][0x%x]", hr));
     return hr;
   }
 
   if (node_value.vt == VT_EMPTY) {
-    CORE_LOG(LE, (_T("[node_value.vt == VT_EMPTY]")));
+    CORE_LOG(LE, (L"[node_value.vt == VT_EMPTY]"));
     return E_FAIL;
   }
 
@@ -837,18 +619,18 @@ HRESULT ReadAttribute(IXMLDOMNode* node,
 }
 
 HRESULT ReadStringValue(IXMLDOMNode* node, CString* value) {
-  CORE_LOG(L4, (_T("[ReadStringValue]")));
+  CORE_LOG(L4, (L"[ReadStringValue]"));
   ASSERT1(node);
   ASSERT1(value);
 
   CComPtr<IXMLDOMNodeList> child_nodes;
   HRESULT hr = node->get_childNodes(&child_nodes);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[get_childNodes failed][0x%x]"), hr));
+    CORE_LOG(LE, (L"[get_childNodes failed][0x%x]", hr));
     return hr;
   }
   if (!child_nodes) {
-    CORE_LOG(LE, (_T("[Msxml S_FALSE return]")));
+    CORE_LOG(LE, (L"[Msxml S_FALSE return]"));
     return E_FAIL;  // Protect against msxml S_FALSE return.
   }
 
@@ -858,7 +640,7 @@ HRESULT ReadStringValue(IXMLDOMNode* node, CString* value) {
     return hr;
   }
 
-  ASSERT(count == 1, (_T("count: %u"), count));
+  ASSERT(count == 1, (L"count: %u", count));
   CComPtr<IXMLDOMNode> child_node;
   hr = child_nodes->nextNode(&child_node);
   if (FAILED(hr)) {
@@ -868,24 +650,24 @@ HRESULT ReadStringValue(IXMLDOMNode* node, CString* value) {
   DOMNodeType type = NODE_INVALID;
   hr = child_node->get_nodeType(&type);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[get_nodeType failed][0x%x]"), hr));
+    CORE_LOG(LE, (L"[get_nodeType failed][0x%x]", hr));
     return hr;
   }
 
   if (type != NODE_TEXT) {
-    CORE_LOG(LE, (_T("[Invalid nodeType][%d]"), type));
+    CORE_LOG(LE, (L"[Invalid nodeType][%d]", type));
     return E_INVALIDARG;
   }
 
   CComVariant node_value;
   hr = child_node->get_nodeValue(&node_value);
   if (FAILED(hr)) {
-    CORE_LOG(LE, (_T("[get_nodeValue failed][0x%x]"), hr));
+    CORE_LOG(LE, (L"[get_nodeValue failed][0x%x]", hr));
     return hr;
   }
 
   if (node_value.vt != VT_BSTR) {
-    CORE_LOG(LE, (_T("[node_value.vt != VT_BSTR][%d]"), node_value.vt));
+    CORE_LOG(LE, (L"[node_value.vt != VT_BSTR][%d]", node_value.vt));
     return E_INVALIDARG;
   }
 

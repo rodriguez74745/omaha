@@ -37,12 +37,12 @@ namespace omaha {
 HRESULT CoCreateSafeDOMDocument(IXMLDOMDocument** my_xmldoc);
 
 // xmlfile can be any specified encoding.
-HRESULT LoadXMLFromFile(const TCHAR* xmlfile,
+HRESULT LoadXMLFromFile(const wchar_t* xmlfile,
                         bool preserve_whitespace,
                         IXMLDOMDocument** xmldoc);
 
 // xmlstring must be UTF-16 or UCS-2.
-HRESULT LoadXMLFromMemory(const TCHAR* xmlstring,
+HRESULT LoadXMLFromMemory(const wchar_t* xmlstring,
                           bool preserve_whitespace,
                           IXMLDOMDocument** xmldoc);
 
@@ -52,7 +52,7 @@ HRESULT LoadXMLFromRawData(const std::vector<byte>& xmldata,
                            IXMLDOMDocument** xmldoc);
 
 // xmlfile is in encoding specified in the XML document.
-HRESULT SaveXMLToFile(IXMLDOMDocument* xmldoc, const TCHAR * xmlfile);
+HRESULT SaveXMLToFile(IXMLDOMDocument* xmldoc, const wchar_t * xmlfile);
 
 // xmlstring is in UCS-2
 HRESULT SaveXMLToMemory(IXMLDOMDocument* xmldoc, CString* xmlstring);
@@ -67,7 +67,7 @@ HRESULT SaveXMLToRawData(IXMLDOMDocument* xmldoc, std::vector<byte>* buffer);
 // in case we want to stick a XMLFQName into a standard collection.
 struct XMLFQName {
   XMLFQName();
-  XMLFQName(const TCHAR* u, const TCHAR* b);
+  XMLFQName(const wchar_t* u, const wchar_t* b);
   ~XMLFQName();
 
   CString uri;
@@ -88,28 +88,16 @@ bool EqualXMLName(const XMLFQName& u, IXMLDOMNode* pnode);
 // Returns the FQ name from the node.
 HRESULT GetXMLFQName(IXMLDOMNode* node, XMLFQName* name);
 
-// Returns a string version of an XMLFQName suitable for debugging use.
-CString XMLFQNameToString(const XMLFQName& fqname);
-
-// Returns a string version of a node's name suitable for debugging use.
-CString NodeToString(IXMLDOMNode* pnode);
-
 //
 // Routines for dealing with fragments of DOM trees.
 //
 // Creates an XMLDOMNode of the given type with a given name and optional text.
 HRESULT CreateXMLNode(IXMLDOMDocument* xmldoc,
                       int node_type,
-                      const TCHAR* node_name,
-                      const TCHAR* namespace_uri,
-                      const TCHAR* text,
+                      const wchar_t* node_name,
+                      const wchar_t* namespace_uri,
+                      const wchar_t* text,
                       IXMLDOMNode** node_out);
-
-// Adds newchild as a child node of xmlnode after all existing children.
-HRESULT AppendXMLNode(IXMLDOMNode* xmlnode, IXMLDOMNode* new_child);
-
-// Adds text as a child node of xmlnode after all existing children.
-HRESULT AppendXMLNode(IXMLDOMNode* xmlnode, const TCHAR* text);
 
 // Adds newchild as an attribute node of xmlnode replacing existing
 // attribute with same name.
@@ -118,31 +106,17 @@ HRESULT AddXMLAttributeNode(IXMLDOMNode* xmlnode, IXMLDOMAttribute* new_child);
 // Adds name/value pair as an attribute node of xmlnode replacing
 // existing attribute with same name.
 HRESULT AddXMLAttributeNode(IXMLDOMElement* xmlelement,
-                            const TCHAR* attribute_name,
-                            const TCHAR* attribute_value);
+                            const wchar_t* attribute_name,
+                            const wchar_t* attribute_value);
 
 // Adds name/value pair as an attribute node of xmlnode replacing
 // existing attribute with same name.
 // Can add attributes to nodes other than IXMLDOMElement.
 // Can add attributes with non-null namespaces.
 HRESULT AddXMLAttributeNode(IXMLDOMNode* xmlnode,
-                            const TCHAR* attribute_namespace,
-                            const TCHAR* attribute_name,
-                            const TCHAR* attribute_value);
-
-// Removes all children of the given node that have the specified name.
-HRESULT RemoveXMLChildrenByName(IXMLDOMNode* xmlnode, const XMLFQName& name);
-
-// Gets a child of a given node by name
-HRESULT GetXMLChildByName(IXMLDOMElement* xmlnode,
-                          const TCHAR* child_name,
-                          IXMLDOMNode** xmlchild);
-
-// Adds newchild as a child node of xmlnode, before the exiting
-// child item_number.
-HRESULT InsertXMLBeforeItem(IXMLDOMNode* xmlnode,
-                            IXMLDOMNode* new_child,
-                            long item_number);  // NOLINT
+                            const wchar_t* attribute_namespace,
+                            const wchar_t* attribute_name,
+                            const wchar_t* attribute_value);
 
 // Gets parse error information after a failed load.
 HRESULT GetXMLParseError(IXMLDOMDocument* xmldoc,
@@ -153,133 +127,31 @@ HRESULT InterpretXMLParseError(IXMLDOMParseError* parse_error,
                                HRESULT* error_code,
                                CString* message);
 
-// Gets the number of children of this node.
-HRESULT GetNumChildren(IXMLDOMNode* pnode, int* num_children);
-
-// Gets the number of attributes of this node.
-int GetNumAttributes(IXMLDOMNode* pnode);
-
 // Returns true if the specified attribute is in this node.
-bool HasAttribute(IXMLDOMNode* node, const TCHAR* attr_name);
+bool HasAttribute(IXMLDOMNode* node, const wchar_t* attr_name);
 
 // Reads and parses attributes of nodes.
-HRESULT ReadAttributeAt(IXMLDOMNode* node,
-                        int index,
-                        CString* attr_name,
-                        CString* attr_value);
 HRESULT ReadBooleanAttribute(IXMLDOMNode* node,
-                             const TCHAR* attr_name,
+                             const wchar_t* attr_name,
                              bool* value);
 HRESULT ReadIntAttribute(IXMLDOMNode* node,
-                         const TCHAR* attr_name,
+                         const wchar_t* attr_name,
                          int* value);
 HRESULT ReadGuidAttribute(IXMLDOMNode* node,
-                          const TCHAR* attr_name,
+                          const wchar_t* attr_name,
                           GUID* value);
 HRESULT ReadStringAttribute(IXMLDOMNode* node,
-                            const TCHAR* attr_name,
+                            const wchar_t* attr_name,
                             CString* value);
 
 // Reads an attribute as a BSTR, given the node and the name of the attribute.
 // This is a helper for the other ReadXXXAttribute methods.
 HRESULT ReadAttribute(IXMLDOMNode* node,
-                      const TCHAR* attr_name,
+                      const wchar_t* attr_name,
                       BSTR* value);
 
 // Reads the string value of a node element, either TEXT or CDATA.
 HRESULT ReadStringValue(IXMLDOMNode* node, CString* value);
-
-// Maps over a list of XML DOM nodes of some kind, executing a function or
-// a member function against each node in the list.
-// Passes a cookie along to each function call useful for accumulating results.
-// Template class List is usually a IXMLDOMNodeList or a IXMLDOMNamedNodeMap.
-template <class List, class Cookie>
-HRESULT ForEachNodeInList(List list,
-                          HRESULT (*fun)(IXMLDOMNode*, Cookie),
-                          Cookie cookie) {
-  ASSERT1(list);  // List assumed to be a pointer type or smart pointer type
-  ASSERT1(fun);
-
-  long len = 0;   // NOLINT
-  RET_IF_FAILED(list->get_length(&len));
-  for (long i = 0; i != len; ++i) {   // NOLINT
-    CComPtr<IXMLDOMNode> node;
-    RET_IF_FAILED(list->get_item(i, &node));
-    ASSERT1(node);
-    RET_IF_FAILED(fun(node, cookie));
-  }
-  return S_OK;
-}
-
-// Same as ForEachNodeInList but it calls a member function of an object.
-template <class List, class Object, class Cookie>
-HRESULT ForEachNodeInListObj(List list,
-                             Object* object,
-                             HRESULT (Object::*fun)(IXMLDOMNode*, Cookie),
-                             Cookie cookie) {
-  ASSERT1(list);
-  ASSERT1(object);
-  ASSERT1(fun);
-
-  long len = 0;   // NOLINT
-  RET_IF_FAILED(list->get_length(&len));
-  for (long i = 0; i != len; ++i) {   // NOLINT
-    CComPtr<IXMLDOMNode> node;
-    RET_IF_FAILED(list->get_item(i, &node));
-    ASSERT1(node);
-    RET_IF_FAILED((object->*fun)(node, cookie));
-  }
-  return S_OK;
-}
-
-// Maps over the attributes of a node, executing a function against each
-// attribute. Passes a cookie along to each function call.
-template <typename Cookie>
-HRESULT ForEachAttribute(IXMLDOMNode* node,
-                         HRESULT (*fun)(IXMLDOMNode*, Cookie),
-                         Cookie cookie) {
-  ASSERT1(node);
-  ASSERT1(fun);
-
-  CComPtr<IXMLDOMNamedNodeMap> attr_list;
-  RET_IF_FAILED(node->get_attributes(&attr_list));
-  ASSERT1(attr_list);
-  RET_IF_FAILED(ForEachNodeInList(attr_list, fun, cookie));
-  return S_OK;
-}
-
-// Maps over the children nodes of a node, executing a function against
-// each child node. Passes a cookie along to each function call.
-template <typename Cookie>
-HRESULT ForEachChildNode(IXMLDOMNode* node,
-                         HRESULT (*fun)(IXMLDOMNode*, Cookie),
-                         Cookie cookie) {
-  ASSERT1(node);
-  ASSERT1(fun);
-
-  CComPtr<IXMLDOMNodeList> child_list;
-  RET_IF_FAILED(node->get_childNodes(&child_list));
-  ASSERT1(child_list);
-  RET_IF_FAILED(ForEachNodeInList(child_list, fun, cookie));
-  return S_OK;
-}
-
-// Same as ForEachChildNode but it calls a member function of an object.
-template <typename Object, typename Cookie>
-HRESULT ForEachChildNodeObj(IXMLDOMNode* node,
-                            Object* object,
-                            HRESULT (Object::*fun)(IXMLDOMNode*, Cookie),
-                            Cookie cookie) {
-  ASSERT1(node);
-  ASSERT1(object);
-  ASSERT1(fun);
-
-  CComPtr<IXMLDOMNodeList> child_list;
-  RET_IF_FAILED(node->get_childNodes(&child_list));
-  ASSERT1(child_list);
-  RET_IF_FAILED(ForEachNodeInListObj(child_list, object, fun, cookie));
-  return S_OK;
-}
 
 }  // namespace omaha
 
