@@ -241,47 +241,6 @@ HRESULT SaveXMLToRawData(IXMLDOMDocument* xmldoc, std::vector<byte>* buffer) {
   return S_OK;
 }
 
-HRESULT CanonicalizeXML(const TCHAR* xmlstring, CString* canonical_xmlstring) {
-  ASSERT1(xmlstring);
-  ASSERT1(canonical_xmlstring);
-
-  // Round-trip through MSXML, having it strip whitespace.
-
-  CComPtr<IXMLDOMDocument> xmldoc;
-  RET_IF_FAILED(CoCreateSafeDOMDocument(&xmldoc));
-  RET_IF_FAILED(xmldoc->put_preserveWhiteSpace(VARIANT_FALSE));
-  {
-    CComBSTR xmlmemory(StringAfterBOM(xmlstring));
-    VARIANT_BOOL is_successful(VARIANT_FALSE);
-    RET_IF_FAILED(xmldoc->loadXML(xmlmemory, &is_successful));
-    if (!is_successful) {
-      CComPtr<IXMLDOMParseError> error;
-      CString error_message;
-      RET_IF_FAILED(GetXMLParseError(xmldoc, &error));
-      ASSERT1(error);
-      HRESULT error_code = 0;
-      RET_IF_FAILED(InterpretXMLParseError(error, &error_code, &error_message));
-      UTIL_LOG(LE, (L"[CanonicalizeXML][parse error: %s]", error_message));
-      ASSERT1(FAILED(error_code));
-      return FAILED(error_code) ? error_code : CI_E_XML_LOAD_ERROR;
-    }
-  }
-  std::vector<CString> lines;
-  {
-    CComBSTR xmlmemory2;
-    RET_IF_FAILED(xmldoc->get_xml(&xmlmemory2));
-    TextToLines(CString(xmlmemory2), L"\r\n", &lines);
-  }
-  {
-    for (size_t i = 0; i < lines.size(); ++i) {
-      TrimString(lines[i], L" \t");
-    }
-    LinesToText(lines, L"", canonical_xmlstring);
-  }
-
-  return S_OK;
-}
-
 bool operator==(const XMLFQName& u, const XMLFQName& v) {
   if (u.uri && v.uri) {
     // Both uris are non-null -> compare all the components.

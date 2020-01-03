@@ -741,21 +741,6 @@ TEST(StringTest, TextToLinesAndBack) {
   ASSERT_TRUE(0 == text_out.Compare(sample_output2));
 }
 
-CString TrimStdString(const TCHAR* str) {
-  CString s(str);
-  TrimString(s, L" \t");
-  return s;
-}
-
-TEST(StringTest, TrimString) {
-  ASSERT_STREQ(L"abc", TrimStdString(L"abc"));
-  ASSERT_STREQ(L"abc", TrimStdString(L" abc "));
-  ASSERT_STREQ(L"a c", TrimStdString(L" a c  "));
-  ASSERT_STREQ(L"abc", TrimStdString(L" \tabc\t "));
-  ASSERT_STREQ(L"", TrimStdString(L""));
-  ASSERT_STREQ(L"", TrimStdString(L"   "));
-}
-
 TEST(StringTest, EscapeUnescape) {
   CString original_str(_T("test <>\"#{}|\\^[]?%&/"));
   CString escaped_str;

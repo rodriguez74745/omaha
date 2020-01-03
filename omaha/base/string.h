@@ -154,10 +154,6 @@ int WebSafeBase64Unescape(const char *src, int slen, char *dest, int szdest);
 bool IsSpaceW(WCHAR c);
 bool IsSpaceA(char c);
 
-// Trims all characters in the delimiter string from both ends of the
-// string s
-void TrimString(CString& s, const TCHAR* delimiters);
-
 // A block of text to separate lines, and back
 void TextToLines(const CString& text, const TCHAR* delimiter, std::vector<CString>* lines);
 // (LinesToText puts a delimiter at the end of the last line too)

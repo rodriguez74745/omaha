@@ -91,42 +91,6 @@ void MakeLowerCString(CString & s) {
   s.ReleaseBufferSetLength(len);
 }
 
-int Trim(TCHAR *s) {
-  ASSERT(s, (L""));
-
-  // First find end of leading spaces
-  TCHAR *start = s;
-  while (*start) {
-    if (!IsSpace(*start))
-      break;
-    ++start;
-  }
-
-  // Now search for the end, remembering the start of the last spaces
-  TCHAR *end = start;
-  TCHAR *last_space = end;
-  while (*end) {
-    if (!IsSpace(*end))
-      last_space = end + 1;
-    ++end;
-  }
-
-  // Copy the part we want
-  ptrdiff_t len = last_space - start;
-  // lint -e{802}  Conceivably passing a NULL pointer
-  memmove(s, start, len * sizeof(TCHAR));
-
-  // 0 terminate
-  s[len] = 0;
-
-  // TODO(portability): this conversion is unsafe.
-  return static_cast<int>(len);
-}
-
-void TrimString(CString& s, const TCHAR* delimiters) {
-  s = s.Trim(delimiters);
-}
-
 // A block of text to separate lines, and back
 void TextToLines(const CString& text, const TCHAR* delimiter, std::vector<CString>* lines) {
   ASSERT(delimiter, (L""));
@@ -176,62 +140,6 @@ void LinesToText(const std::vector<CString>& lines, const TCHAR* delimiter, CStr
   }
 }
 
-// Take 1 single hexadecimal "digit" (as a character) and return its decimal value
-// Returns -1 if given invalid hex digit
-int HexDigitToDec(const TCHAR digit) {
-  if (digit >= L'A' && digit <= L'F')
-    return 10 + (digit - L'A');
-  else if (digit >= L'a' && digit <= L'f')
-    return 10 + (digit - L'a');
-  else if (digit >= L'0' && digit <= L'9')
-    return (digit - L'0');
-  else
-    return -1;
-}
-
-// Convert the 2 hex chars at positions <pos> and <pos>+1 in <s> to a char (<char_out>)
-// Note: scanf was giving me troubles, so here's the manual version
-// Extracted char gets written to <char_out>, which must be allocated by
-// the caller; return true on success or false if parameters are incorrect
-// or string does not have 2 hex digits at the specified position
-// NOTE: <char_out> is NOT a string, just a pointer to a char for the result
-bool ExtractChar(const CString & s, int pos, unsigned char * char_out) {
-  // char_out may be NULL
-
-  if (s.GetLength() < pos + 1) {
-    return false;
-  }
-
-  if (pos < 0 || NULL == char_out) {
-    ASSERT(0, (_T("invalid params: pos<0 or char_out is NULL")));
-    return false;
-  }
-
-  TCHAR c1 = s.GetAt(pos);
-  TCHAR c2 = s.GetAt(pos+1);
-
-  int p1 = HexDigitToDec(c1);
-  int p2 = HexDigitToDec(c2);
-
-  if (p1 == -1 || p2 == -1) {
-    return false;
-  }
-
-  *char_out = (unsigned char)(p1 * 16 + p2);
-  return true;
-}
-
-WCHAR *ToWide (const char *s, int len) {
-    ASSERT (s, (L""));
-    WCHAR *w = new WCHAR [len+1]; if (!w) { return NULL; }
-    // int rc = MultiByteToWideChar (CP_ACP, 0, s.GetString(), (int)s.GetLength()+1, w, s.GetLength()+1);
-    // TODO(omaha): why would it ever be the case that rc > len?
-    int rc = MultiByteToWideChar (CP_ACP, 0, s, len, w, len);
-    if (rc > len) { delete [] w; return NULL; }
-    // ASSERT (rc <= len, (L""));
-    w[rc]=L'\0';
-    return w;
-}
 
 // Converting the Ansi Multibyte String into unicode string. The multibyte
 // string is encoded using the specified codepage.

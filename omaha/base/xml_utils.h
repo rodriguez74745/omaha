@@ -60,14 +60,6 @@ HRESULT SaveXMLToMemory(IXMLDOMDocument* xmldoc, CString* xmlstring);
 // buffer is in the encoding specified in the XML document.
 HRESULT SaveXMLToRawData(IXMLDOMDocument* xmldoc, std::vector<byte>* buffer);
 
-// Canonicalizes the XML string so you can compute a signature on it.
-// This is not the official canonicalization but a cheaper scheme which
-// depends on the whitespace stripping capability of MSXML.
-//
-// xmlstring is in UTF-16 or UCS-2
-HRESULT CanonicalizeXML(const TCHAR* xmlstring, CString* canonical_xmlstring);
-
-
 // Dealing with element/attribute names: the combination of a base name
 // and a namespace URI is a fully-qualified XML name, or: XMLFQName.
 
