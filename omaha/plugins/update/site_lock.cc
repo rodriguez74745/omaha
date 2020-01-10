@@ -22,10 +22,10 @@
 #include <wininet.h>
 #include <memory>
 
-#include "omaha/base/atl_regexp.h"
 #include "omaha/base/constants.h"
 #include "omaha/base/error.h"
 #include "omaha/base/safe_format.h"
+#include "omaha/base/string.h"
 #include "omaha/base/reg_key.h"
 #include "omaha/plugins/update/npapi/urlpropbag.h"
 
@@ -71,10 +71,8 @@ bool SiteLock::InApprovedDomain(const WCHAR* url) {
     return false;
   }
   CString hostname(components.lpszHostName, components.dwHostNameLength);
-  for (std::vector<std::wregex>::const_iterator it = patterns_.begin();
-       it != patterns_.end();
-       ++it) {
-    if (std::regex_search(hostname, *it)) {
+  for (const auto& pattern : patterns_) {
+    if (std::regex_search(hostname.GetString(), pattern)) {
       return true;
     }
   }

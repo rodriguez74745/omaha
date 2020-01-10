@@ -17,6 +17,7 @@
 #include <objbase.h>
 #include <objidl.h>
 #include "omaha/base/error.h"
+#include "omaha/base/string.h"
 #include "omaha/base/system.h"
 #include "omaha/base/utils.h"
 #include "omaha/base/vistautil.h"

@@ -17,12 +17,15 @@
 #define OMAHA_PLUGINS_UPDATE_SITE_LOCK_H_
 
 #include <windows.h>
+
+#include <atlbase.h>
+#include <atlstr.h>
+#include <ocidl.h>
 #include <tchar.h>
 #include <regex>
 #include <vector>
 
 #include "base/basictypes.h"
-
 
 namespace omaha {
 
